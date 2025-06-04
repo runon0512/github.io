@@ -1,0 +1,57 @@
+body {
+    font-family: 'Arial', sans-serif; /* より一般的なフォントに変更 */
+    background-color: #2c3e50; /* ダークブルーグレーの背景 */
+    color: #ecf0f1; /* 明るいグレーのテキスト */
+    margin: 0;
+    padding: 20px; /* コンテンツ周りの余白 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 水平中央揃え */
+    justify-content: center; /* 垂直中央揃え（コンテンツが少ない場合） */
+    min-height: 100vh; /* ビューポート全体の高さを確保 */
+    text-align: center; /* body内のテキストを中央揃え */
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px;
+    background-color: rgba(0, 0, 0, 0.15); /* 少し透明な黒背景 */
+    border-radius: 10px; /* 角を丸くする */
+    box-shadow: 0 0 25px rgba(0,0,0,0.4); /* 影を付ける */
+}
+
+h1 {
+    color: #e67e22; /* マクラーレンオレンジ */
+    margin-top: 0; /* game-containerのpaddingがあるので上マージンは不要に */
+    margin-bottom: 25px;
+    font-size: 2.8em; /* フォントサイズを少し大きく */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* テキストに影を付ける */
+}
+
+canvas {
+    border: 3px solid #e67e22; /* マクラーレンオレンジの枠線 */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* キャンバスに影を付ける */
+    /* background-color: #34495e; */ /* ゲーム自体が背景を描画するため、通常は不要 */
+    display: block; /* margin auto を効かせるため、またはflexアイテムとして */
+}
+
+.controls-info {
+    margin-top: 25px;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    font-size: 0.95em;
+    color: #bdc3c7; /* 少し明るいグレー */
+    max-width: 400px; /* 幅が広がりすぎないように */
+    text-align: left; /* 操作説明のテキストは左揃えに */
+}
+
+.controls-info p, .controls-info ul {
+    margin: 8px 0;
+}
+
+.controls-info ul {
+    padding-left: 20px; /* リストのインデント */
+}
