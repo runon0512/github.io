@@ -832,7 +832,7 @@ document.addEventListener('keydown', (e) => {
                 }
             }
             // リプレイ操作以外のキーはデフォルト動作を抑制しない
-        } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === ' ') { // 下矢印、上矢印、スペースキーの場合
+        } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || (e.key === ' ' && gameState !== 'replay')) { // 下矢印、上矢印、スペースキーの場合 (リプレイ中以外)
             if (gameState !== 'replay') { // リプレイ中以外でこれらのキーが押されたらデフォルト動作を抑制
                 e.preventDefault();
             }
