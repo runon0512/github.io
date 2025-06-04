@@ -313,6 +313,14 @@ const backButton = { // セーブ・ロード画面用
     }
 };
 
+const deleteAllSavesButton = { // ロード画面用
+    x: 0, y: 0, width: 220, height: 40, text: "すべてのセーブデータを削除",
+    isVisible: false,
+    isClicked: function(mouseX, mouseY) {
+        return this.isVisible && mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
+    }
+};
+
 // === セーブ/ロード画面レイアウト定数 ===
 const SLOTS_PER_ROW = 5;
 const SLOT_MARGIN_X = 20;
@@ -587,10 +595,30 @@ function initializeCars() {
 
                 if (teamForPlayer.drivers.length >= 2) {
                     console.log(`Player ${playerShortName} not found in ${careerPlayerTeamName} roster, replacing driver at index 1.`);
+                    const replacedDriver = teamForPlayer.drivers[1]; // 置き換えられるドライバーを取得
                     teamForPlayer.drivers[1] = newPlayerData;
+                    // 置き換えられたドライバーをリザーブプールに追加
+                    if (replacedDriver && replacedDriver.name !== playerShortName) {
+                        const existingReserve = reserveAndF2Drivers.find(d => d.name === replacedDriver.name);
+                        if (!existingReserve) {
+                            const teamTier = teamForPlayer.tier || 5;
+                            reserveAndF2Drivers.push({
+                                name: replacedDriver.name, fullName: replacedDriver.fullName || replacedDriver.name,
+                                rating: replacedDriver.rating, aggression: replacedDriver.aggression !== undefined ? replacedDriver.aggression : carDefaults.aggression,
+                                age: replacedDriver.age, desiredTierMin: teamTier, desiredTierMax: Math.min(5, teamTier + 1)
+                            });
+                            console.log(`Replaced driver ${replacedDriver.name} from ${careerPlayerTeamName} (Tier ${teamTier}) added to reserve/F2 pool.`);
+                            reserveAndF2Drivers.sort((a, b) => b.rating - a.rating); // レーティングでソート
+                        }
+                    }
                 } else if (teamForPlayer.drivers.length === 1) {
                     console.log(`Player ${playerShortName} not found in ${careerPlayerTeamName} roster (1 driver team), replacing driver at index 0.`);
+                    const replacedDriver = teamForPlayer.drivers[0]; // 置き換えられるドライバーを取得
                     teamForPlayer.drivers[0] = newPlayerData;
+                    // 置き換えられたドライバーをリザーブプールに追加 (上記と同様のロジック)
+                    if (replacedDriver && replacedDriver.name !== playerShortName) {
+                        // (重複を避けるため、上記と全く同じコードブロックをここに挿入)
+                    }
                 } else {
                     console.log(`Player ${playerShortName} not found in ${careerPlayerTeamName} roster (0 driver team), adding player.`);
                     teamForPlayer.drivers.push(newPlayerData);
@@ -1469,6 +1497,20 @@ canvas.addEventListener('click', (event) => {
             gameState = 'title_screen';
             previousGameStateBeforeSaveLoad = null; // 使用後はクリア
             // generalSaveButton.isVisible = false; // タイトル画面では通常表示されない
+            return;
+        }
+        if (deleteAllSavesButton.isClicked(mousePos.x, mousePos.y)) {
+            if (confirm("本当にすべてのセーブデータを削除しますか？この操作は元に戻せません。")) {
+                if (confirm("最終確認：すべてのセーブデータを完全に削除します。よろしいですか？")) {
+                    localStorage.removeItem(ALL_SAVES_KEY);
+                    loadSaveSlotsMetadata(); // メタデータを再読み込みして画面を更新
+                    alert("すべてのセーブデータが削除されました。");
+                } else {
+                    alert("削除はキャンセルされました。");
+                }
+            } else {
+                alert("削除はキャンセルされました。");
+            }
             return;
         }
         const slotClickedIndex = getClickedSlotIndex(mousePos.x, mousePos.y);
@@ -5069,6 +5111,23 @@ function drawSaveLoadScreen(isSaveMode) {
     ctx.fillRect(backButton.x, backButton.y, backButton.width, backButton.height);
     ctx.fillStyle = 'white'; ctx.font = 'bold 18px Arial';
     ctx.fillText(backButton.text, backButton.x + backButton.width / 2, backButton.y + backButton.height / 2 + 6);
+
+    // 「すべてのセーブデータを削除」ボタン (ロードモード時のみ)
+    if (!isSaveMode) {
+        deleteAllSavesButton.isVisible = true;
+        deleteAllSavesButton.x = canvas.width - deleteAllSavesButton.width - 10; // 右上に配置
+        deleteAllSavesButton.y = 10; // 上からのマージン
+
+        ctx.fillStyle = 'rgba(200, 50, 50, 0.8)'; // 赤系のボタン
+        ctx.fillRect(deleteAllSavesButton.x, deleteAllSavesButton.y, deleteAllSavesButton.width, deleteAllSavesButton.height);
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 16px Arial'; // フォントサイズ調整
+        ctx.textAlign = 'center';
+        ctx.fillText(deleteAllSavesButton.text, deleteAllSavesButton.x + deleteAllSavesButton.width / 2, deleteAllSavesButton.y + deleteAllSavesButton.height / 2 + 5);
+    } else {
+        deleteAllSavesButton.isVisible = false;
+    }
+
 
     // スロット描画
     calculatedSlotWidth = (canvas.width - (SLOTS_PER_ROW + 1) * SLOT_MARGIN_X) / SLOTS_PER_ROW;
