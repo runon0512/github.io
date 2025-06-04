@@ -2187,7 +2187,14 @@ function update() {
 
                 // --- AI回避ロジック用実効値 (レーティングで変動) ---
                 const EFFECTIVE_OBSTACLE_DETECTION_DISTANCE_FORWARD = (CAR_HEIGHT * 5) * (1 + ratingFactor * 2.4); // ベース距離 CAR_HEIGHT * 5, 最大120%変動 (元の値)
-                const EFFECTIVE_AVOID_STEER_ANGLE = (Math.PI / 30) * (1 + ratingFactor * 2.0); // ベース角度 Math.PI / 30, 最大100%変動
+                
+                // 新しい EFFECTIVE_AVOID_STEER_ANGLE の計算
+                // レーティング 100 で 80度、レーティング 50 で 5度 になるように線形補間
+                // 式: 角度(度) = 1.5 * レーティング - 70
+                let degreesAvoidSteerAngle = 1.5 * aiCar.rating - 70;
+                // 角度を 5度 から 80度 の範囲にクランプ
+                degreesAvoidSteerAngle = Math.max(5, Math.min(degreesAvoidSteerAngle, 80));
+                const EFFECTIVE_AVOID_STEER_ANGLE = degreesAvoidSteerAngle * (Math.PI / 180); // ラジアンに変換
                 const AI_LATERAL_AVOID_SPEED = 1.7; // AIの横移動速度を固定値に (以前のEFFECTIVE_LATERAL_AVOID_SPEEDから変更)
                 const EFFECTIVE_OBSTACLE_DETECTION_WIDTH_FACTOR = 1.0 * (1 + ratingFactor * 1.6); // ベース検知幅係数 1.0, 最大80%変動
 
