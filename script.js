@@ -384,6 +384,28 @@ function calculateInitialZoomLevel() {
 }
 calculateInitialZoomLevel();
 
+// === Scrollbar Settings ===
+const SCROLLBAR_WIDTH = 12;
+const SCROLLBAR_PADDING = 5; // スクロールバーとキャンバス右端との間のパディング
+const SCROLLBAR_MIN_THUMB_HEIGHT = 20;
+const SCROLLBAR_TRACK_COLOR = 'rgba(80, 80, 80, 0.7)';
+const SCROLLBAR_THUMB_COLOR = 'rgba(130, 130, 130, 0.9)';
+let isDraggingScrollbar = false;
+let scrollbarDragStartMouseY = 0;
+let scrollbarDragStartScrollY = 0;
+let activeScrollbarScreen = null; // 'season_end', 'team_standings', 'machine_performance'
+let scrollbarTrackHeightForDrag = 0;
+let scrollbarThumbHeightForDrag = 0;
+let scrollbarMaxScrollForDrag = 0;
+
+// 初期ZOOM_LEVELをスライダーのデフォルト値として設定
+function calculateInitialZoomLevel() {
+    // ZOOM_LEVEL は既に 1.0 で初期化されているので、ここでは特別な処理は不要
+    // スライダーのYマージンをキャンバス中央になるように設定
+    SLIDER_MARGIN_TOP = canvas.height / 2 - SLIDER_TRACK_HEIGHT / 2;
+}
+calculateInitialZoomLevel();
+
 // Moved from later in the file to ensure it's defined before use.
 // This function loads metadata for save slots from localStorage.
 function loadSaveSlotsMetadata() {
@@ -826,17 +848,62 @@ canvas.addEventListener('mousedown', (event) => {
     const mousePos = getMousePos(canvas, event);
     // スライダーのつまみの現在のY座標を計算
     const thumbY = sliderTrackY + ((ZOOM_LEVEL - MIN_ZOOM) / (MAX_ZOOM - MIN_ZOOM)) * (SLIDER_TRACK_HEIGHT - SLIDER_THUMB_HEIGHT);
-    const thumbX = sliderTrackX + (SLIDER_TRACK_WIDTH / 2) - (SLIDER_THUMB_WIDTH / 2);
+    const sliderThumbX = sliderTrackX + (SLIDER_TRACK_WIDTH / 2) - (SLIDER_THUMB_WIDTH / 2);
 
     // つまみの上でマウスダウンされたかチェック
-    if (mousePos.x >= thumbX && mousePos.x <= thumbX + SLIDER_THUMB_WIDTH &&
+    if (mousePos.x >= sliderThumbX && mousePos.x <= sliderThumbX + SLIDER_THUMB_WIDTH &&
         mousePos.y >= thumbY && mousePos.y <= thumbY + SLIDER_THUMB_HEIGHT) {
         isDraggingZoomSlider = true;
+        isDraggingScrollbar = false; // Ensure scrollbar dragging is off
     } else if (mousePos.x >= sliderTrackX && mousePos.x <= sliderTrackX + SLIDER_TRACK_WIDTH &&
                mousePos.y >= sliderTrackY && mousePos.y <= sliderTrackY + SLIDER_TRACK_HEIGHT) {
         // トラック上で直接クリックされた場合もドラッグ開始とし、値を更新
         isDraggingZoomSlider = true;
+        isDraggingScrollbar = false; // Ensure scrollbar dragging is off
         updateZoomLevelFromMouse(mousePos.y);
+    } else {
+        // Check for scrollbar interaction if not dragging zoom slider
+        let scrollbarParams = null;
+        let currentScrollYVar = null;
+        let setScrollYFunc = null;
+
+        if (gameState === 'career_season_end' || gameState === 'career_team_standings') {
+            scrollbarParams = getScrollbarRenderParams(
+                gameState === 'career_season_end' ? (cars.length > 0 ? cars.length : NUM_CARS) * 25 : Object.keys(driverLineups).length * 25, // contentTotalHeight
+                120, // scrollableAreaY
+                canvas.height - 120 - 120, // scrollableAreaHeight
+                careerSeasonEndScrollY
+            );
+            currentScrollYVar = careerSeasonEndScrollY;
+            activeScrollbarScreen = gameState;
+        } else if (gameState === 'career_machine_performance') {
+            const teams = Object.keys(driverLineups);
+            const numTeams = teams.length;
+            const barHeight = 18; const barGap = 4; const teamGap = 12;
+            const totalTeamBlockHeight = barHeight * 2 + barGap + teamGap;
+            scrollbarParams = getScrollbarRenderParams(
+                totalTeamBlockHeight * numTeams, // contentTotalHeight
+                120, // scrollableAreaY (graphAreaY_local)
+                canvas.height - 120 - 70, // scrollableAreaHeight
+                careerMachinePerformanceScrollY
+            );
+            currentScrollYVar = careerMachinePerformanceScrollY;
+            activeScrollbarScreen = gameState;
+        }
+
+        if (scrollbarParams && scrollbarParams.maxScroll > 0) {
+            if (mousePos.x >= scrollbarParams.x && mousePos.x <= scrollbarParams.x + SCROLLBAR_WIDTH &&
+                mousePos.y >= scrollbarParams.thumbY && mousePos.y <= scrollbarParams.thumbY + scrollbarParams.thumbHeight) {
+                isDraggingScrollbar = true;
+                isDraggingZoomSlider = false; // Ensure zoom slider dragging is off
+                scrollbarDragStartMouseY = mousePos.y;
+                scrollbarDragStartScrollY = currentScrollYVar;
+                scrollbarTrackHeightForDrag = scrollbarParams.trackHeight;
+                scrollbarThumbHeightForDrag = scrollbarParams.thumbHeight;
+                scrollbarMaxScrollForDrag = scrollbarParams.maxScroll;
+                event.preventDefault(); // Prevent text selection or other default actions
+            }
+        }
     }
 });
 
@@ -844,15 +911,40 @@ canvas.addEventListener('mousemove', (event) => {
     if (isDraggingZoomSlider) {
         const mousePos = getMousePos(canvas, event);
         updateZoomLevelFromMouse(mousePos.y);
+    } else if (isDraggingScrollbar) {
+        const mousePos = getMousePos(canvas, event);
+        const deltaMouseY = mousePos.y - scrollbarDragStartMouseY;
+        let newScrollY = scrollbarDragStartScrollY;
+
+        if (scrollbarTrackHeightForDrag - scrollbarThumbHeightForDrag > 0) {
+            const scrollDeltaRatio = deltaMouseY / (scrollbarTrackHeightForDrag - scrollbarThumbHeightForDrag);
+            newScrollY += scrollDeltaRatio * scrollbarMaxScrollForDrag;
+        }
+
+        newScrollY = Math.max(0, Math.min(newScrollY, scrollbarMaxScrollForDrag));
+
+        if (activeScrollbarScreen === 'career_season_end' || activeScrollbarScreen === 'career_team_standings') {
+            careerSeasonEndScrollY = newScrollY;
+        } else if (activeScrollbarScreen === 'career_machine_performance') {
+            careerMachinePerformanceScrollY = newScrollY;
+        }
     }
 });
 
 canvas.addEventListener('mouseup', () => {
-    isDraggingZoomSlider = false;
+    if (isDraggingZoomSlider) {
+        isDraggingZoomSlider = false;
+    }
+    if (isDraggingScrollbar) {
+        isDraggingScrollbar = false;
+        activeScrollbarScreen = null;
+    }
 });
 
 canvas.addEventListener('mouseleave', () => {
-    isDraggingZoomSlider = false;
+    // isDraggingZoomSlider = false; // Keep dragging if mouse leaves and comes back while button is held
+    // Similar for scrollbar, though less common. If mouseup is missed, this could be a fallback.
+    // For now, rely on mouseup.
 });
 
 canvas.addEventListener('wheel', (event) => {
@@ -3615,6 +3707,34 @@ function drawCareerRosterScreen() {
     ctx.restore();
 }
 
+// Helper function to get parameters for drawing a scrollbar
+function getScrollbarRenderParams(contentTotalHeight, scrollableAreaY, scrollableAreaHeight, currentScrollY) {
+    const maxScroll = Math.max(0, contentTotalHeight - scrollableAreaHeight);
+    let thumbHeight = 0;
+    let thumbY = scrollableAreaY;
+
+    if (maxScroll > 0 && scrollableAreaHeight > 0 && contentTotalHeight > 0) {
+        thumbHeight = Math.max(SCROLLBAR_MIN_THUMB_HEIGHT, scrollableAreaHeight * (scrollableAreaHeight / contentTotalHeight));
+        thumbHeight = Math.min(thumbHeight, scrollableAreaHeight); // Thumb cannot be taller than track
+        const scrollableRatio = currentScrollY / maxScroll;
+        thumbY = scrollableAreaY + scrollableRatio * (scrollableAreaHeight - thumbHeight);
+    } else if (scrollableAreaHeight > 0) { // No scrolling needed, thumb is full height
+        thumbHeight = scrollableAreaHeight;
+        thumbY = scrollableAreaY;
+    }
+
+    return {
+        x: canvas.width - SCROLLBAR_WIDTH - SCROLLBAR_PADDING,
+        trackY: scrollableAreaY,
+        trackHeight: scrollableAreaHeight,
+        thumbY: thumbY,
+        thumbHeight: thumbHeight,
+        currentScroll: currentScrollY,
+        maxScroll: maxScroll,
+        contentTotalHeight: contentTotalHeight
+    };
+}
+
 function drawCareerSeasonEndScreen() {
     ctx.save();
     ctx.fillStyle = 'rgba(20, 20, 20, 0.98)';
@@ -3687,8 +3807,14 @@ function drawCareerSeasonEndScreen() {
     const listDisplayStartY = 120; // リストが画面上に表示され始めるY座標
     const listDisplayEndY = canvas.height - 120; // リストが画面上に表示され終わるY座標 (ボタンの上まで)
     const numDrivers = allDriversData.length; // スクロール範囲計算用に更新
+
+    // 表示列のX座標設定
+    const rankX = canvas.width / 2 - 180; // 順位のX座標
+    const nameX = canvas.width / 2 - 150; // 名前のX座標
+    const pointsX = canvas.width / 2 + 150; // ポイントのX座標
+
     ctx.font = 'bold 20px Arial';
-    ctx.textAlign = 'center'; // 中央揃えでランキングを表示
+    // ctx.textAlign = 'center'; // 個別に設定するためコメントアウト
 
     allDriversData.forEach((driverData, index) => {
         const rank = index + 1;
@@ -3704,13 +3830,23 @@ function drawCareerSeasonEndScreen() {
         if (itemScrolledY >= listDisplayStartY - lineHeight && itemScrolledY < listDisplayEndY + lineHeight) {
             // displayName は既に driverData.fullName で設定済み
 
-            let text = `${rank}. ${displayName} - ${driverData.points} pts`;
             if (driverData.isPlayer) { // プレイヤーの成績を強調
                 ctx.fillStyle = 'yellow';
             } else {
                 ctx.fillStyle = 'white';
             }
-            ctx.fillText(text, canvas.width / 2, itemScrolledY);
+
+            // 順位
+            ctx.textAlign = 'right';
+            ctx.fillText(`${rank}.`, rankX, itemScrolledY);
+
+            // 名前
+            ctx.textAlign = 'left';
+            ctx.fillText(displayName, nameX, itemScrolledY);
+
+            // ポイント
+            ctx.textAlign = 'right';
+            ctx.fillText(`${driverData.points} pts`, pointsX, itemScrolledY);
         }
     });
 
@@ -3729,6 +3865,20 @@ function drawCareerSeasonEndScreen() {
     ctx.textAlign = 'center';
     ctx.font = 'bold 22px Arial';
     ctx.fillText(actionButton.text, actionButton.x + actionButton.width / 2, actionButton.y + actionButton.height / 2 + 8);
+
+    // Draw Scrollbar
+    const scrollableAreaY = listDisplayStartY;
+    const scrollableAreaHeight = listDisplayEndY - listDisplayStartY;
+    const contentTotalHeight = allDriversData.length * lineHeight;
+
+    const scrollParams = getScrollbarRenderParams(contentTotalHeight, scrollableAreaY, scrollableAreaHeight, careerSeasonEndScrollY);
+    if (scrollParams.maxScroll > 0) {
+        drawScrollbar(ctx, scrollParams.x, scrollParams.trackY, scrollParams.trackHeight, scrollParams.thumbY, scrollParams.thumbHeight);
+    }
+
+
+
+
 
     // generalSaveButton.isVisible はここでは設定しない (デフォルトでfalseのまま)
     // generalSaveButton.x, generalSaveButton.y も設定不要
@@ -3763,13 +3913,17 @@ function drawCareerTeamStandingsScreen() {
     const listDisplayStartY = 120;
     const listDisplayEndY = canvas.height - 120;
     const teamLineHeight = 25;
+    // 表示列のX座標設定 (ドライバーランキングと合わせるか、専用に調整)
+    const teamRankX = canvas.width / 2 - 180;
+    const teamNameX = canvas.width / 2 - 150;
+    const teamPointsX = canvas.width / 2 + 150;
 
     // --- チームポイントの表示 ---
     const teamListHeaderY = listDisplayStartY; // チームリストは上から開始
 
     ctx.font = 'bold 24px "Formula1 Display Wide", Arial, sans-serif'; // チームランキングのタイトル (ヘッダーとして)
     ctx.fillStyle = 'white';
-    ctx.textAlign = 'center';
+    // ctx.textAlign = 'center'; // 個別に設定するためコメントアウト
     // ヘッダーはスクロールしない固定表示とするか、リストの一部としてスクロールさせるか。ここではリストの一部とする。
     // const teamListHeaderScrolledY = teamListHeaderY - careerSeasonEndScrollY;
     // if (teamListHeaderScrolledY >= listDisplayStartY - teamLineHeight && teamListHeaderScrolledY < listDisplayEndY + teamLineHeight * 2) {
@@ -3785,13 +3939,24 @@ function drawCareerTeamStandingsScreen() {
     ctx.font = 'bold 20px Arial'; // チームリストのフォント
     teamStandings.forEach((teamData, index) => {
         const rank = index + 1;
-        const text = `${rank}. ${teamData.name} - ${teamData.points} pts`;
+        // const text = `${rank}. ${teamData.name} - ${teamData.points} pts`;
         const itemAbsoluteY = teamListHeaderY + index * teamLineHeight; // ヘッダーの分下にずらす
         const itemScrolledY = itemAbsoluteY - careerSeasonEndScrollY;
 
         if (itemScrolledY >= listDisplayStartY - teamLineHeight && itemScrolledY < listDisplayEndY + teamLineHeight) {
             ctx.fillStyle = (teamData.name === careerPlayerTeamName) ? 'cyan' : 'white'; // プレイヤー所属チームをハイライト
-            ctx.fillText(text, canvas.width / 2, itemScrolledY);
+
+            // 順位
+            ctx.textAlign = 'right';
+            ctx.fillText(`${rank}.`, teamRankX, itemScrolledY);
+
+            // チーム名
+            ctx.textAlign = 'left';
+            ctx.fillText(teamData.name, teamNameX, itemScrolledY);
+
+            // ポイント
+            ctx.textAlign = 'right';
+            ctx.fillText(`${teamData.points} pts`, teamPointsX, itemScrolledY);
         }
     });
 
@@ -3802,6 +3967,15 @@ function drawCareerTeamStandingsScreen() {
     ctx.fillStyle = 'white'; ctx.textAlign = 'center'; ctx.font = 'bold 22px Arial';
     ctx.fillText(actionButton.text, actionButton.x + actionButton.width / 2, actionButton.y + actionButton.height / 2 + 8);
     ctx.restore();
+
+    // Draw Scrollbar for Team Standings
+    const scrollableAreaY_teams = listDisplayStartY; // Same as driver standings for Y start
+    const scrollableAreaHeight_teams = listDisplayEndY - listDisplayStartY; // Same visible height
+    const contentTotalHeight_teams = teamStandings.length * teamLineHeight;
+    const scrollParamsTeams = getScrollbarRenderParams(contentTotalHeight_teams, scrollableAreaY_teams, scrollableAreaHeight_teams, careerSeasonEndScrollY);
+    if (scrollParamsTeams.maxScroll > 0) {
+        drawScrollbar(ctx, scrollParamsTeams.x, scrollParamsTeams.trackY, scrollParamsTeams.trackHeight, scrollParamsTeams.thumbY, scrollParamsTeams.thumbHeight);
+    }
     // generalSaveButton.isVisible はここでは設定しない (デフォルトでfalseのまま)
     // generalSaveButton.x, generalSaveButton.y も設定不要
     // 描画もメインのdraw関数に任せるか、ここでは行わない (isVisibleがfalseなので描画されない)
@@ -3971,6 +4145,15 @@ function drawCareerMachinePerformanceScreen() {
     ctx.fillStyle = 'white'; ctx.font = 'bold 18px Arial'; ctx.textAlign = 'center';
     ctx.fillText(generalSaveButton.text, generalSaveButton.x + generalSaveButton.width / 2, generalSaveButton.y + generalSaveButton.height / 2 + 6);
     ctx.restore();
+
+    // Draw Scrollbar for Machine Performance
+    const scrollableAreaY_machine = graphAreaY;
+    const scrollableAreaHeight_machine = graphAreaHeight; // Calculated earlier in this function
+    const contentTotalHeight_machine = totalTeamBlockHeight * numTeams; // Calculated earlier
+    const scrollParamsMachine = getScrollbarRenderParams(contentTotalHeight_machine, scrollableAreaY_machine, scrollableAreaHeight_machine, careerMachinePerformanceScrollY);
+    if (scrollParamsMachine.maxScroll > 0) {
+        drawScrollbar(ctx, scrollParamsMachine.x, scrollParamsMachine.trackY, scrollParamsMachine.trackHeight, scrollParamsMachine.thumbY, scrollParamsMachine.thumbHeight);
+    }
 }
 
 // ====== チームオファー関連の関数 ======
@@ -4936,6 +5119,20 @@ function drawSaveLoadScreen(isSaveMode) {
     }
     ctx.restore();
 }
+
+// Generic scrollbar drawing function
+function drawScrollbar(ctx, x, trackY, trackHeight, thumbActualY, thumbActualHeight) {
+    // Draw Track
+    ctx.fillStyle = SCROLLBAR_TRACK_COLOR;
+    ctx.fillRect(x, trackY, SCROLLBAR_WIDTH, trackHeight);
+
+    // Draw Thumb
+    if (thumbActualHeight > 0 && thumbActualHeight <= trackHeight) { // Only draw thumb if it's valid
+        ctx.fillStyle = SCROLLBAR_THUMB_COLOR;
+        ctx.fillRect(x + 1, thumbActualY, SCROLLBAR_WIDTH - 2, thumbActualHeight); // Thumb slightly narrower for border effect
+    }
+}
+
 
 
 // ====== ゲームループ ======
