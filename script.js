@@ -148,7 +148,15 @@ let reserveAndF2Drivers = [
     { name: "R.NIS", fullName: "Roy Nissany", rating: 65, aggression: 0.75, age: 29, desiredTierMin: 5, desiredTierMax: 5 },
     { name: "E.TRU", fullName: "Enzo Trulli", rating: 63, aggression: 0.6, age: 19, desiredTierMin: 5, desiredTierMax: 5 }
 ];
-
+// 追加のF2/リザーブドライバー
+reserveAndF2Drivers.push(
+    { name: "M.WEG", fullName: "Maya Weug", rating: 62, aggression: 0.6, age: 19, desiredTierMin: 5, desiredTierMax: 5 },
+    { name: "N.JUJ", fullName: "Juju Noda", rating: 50, aggression: 0.98, age: 18, desiredTierMin: 5, desiredTierMax: 5 },
+    { name: "D.PIN", fullName: "Doriane Pin", rating: 63, aggression: 0.65, age: 20, desiredTierMin: 4, desiredTierMax: 5 },
+    { name: "A.LEC", fullName: "Arthur Leclerc", rating: 73, aggression: 0.65, age: 23, desiredTierMin: 4, desiredTierMax: 5 },
+    { name: "L.BRO", fullName: "Luke Browning", rating: 75, aggression: 0.7, age: 22, desiredTierMin: 4, desiredTierMax: 5 },
+    { name: "Z.OSU", fullName: "Zak O'Sullivan", rating: 71, aggression: 0.6, age: 19, desiredTierMin: 4, desiredTierMax: 5 }
+);
 
 // carImageSources に含まれるべき正しいファイル名リスト (driverLineups と同期確認用)
 const expectedImageFilesFromLineups = [];
@@ -2188,12 +2196,12 @@ function update() {
                 // --- AI回避ロジック用実効値 (レーティングで変動) ---
                 const EFFECTIVE_OBSTACLE_DETECTION_DISTANCE_FORWARD = (CAR_HEIGHT * 5) * (1 + ratingFactor * 2.4); // ベース距離 CAR_HEIGHT * 5, 最大120%変動 (元の値)
                 
-                // 新しい EFFECTIVE_AVOID_STEER_ANGLE の計算
-                // レーティング 100 で 80度、レーティング 50 で 5度 になるように線形補間
-                // 式: 角度(度) = 1.5 * レーティング - 70
-                let degreesAvoidSteerAngle = 1.5 * aiCar.rating - 70;
-                // 角度を 5度 から 80度 の範囲にクランプ
-                degreesAvoidSteerAngle = Math.max(5, Math.min(degreesAvoidSteerAngle, 80));
+                // 新しい EFFECTIVE_AVOID_STEER_ANGLE の計算 (1度から20度の範囲)
+                // レーティング 100 で 1度、レーティング 50 で 20度 になるように線形補間
+                // 式: 角度(度) = -0.38 * レーティング + 39
+                let degreesAvoidSteerAngle = -0.38 * aiCar.rating + 39;
+                // 角度を 1度 から 20度 の範囲にクランプ
+                degreesAvoidSteerAngle = Math.max(1, Math.min(degreesAvoidSteerAngle, 20));
                 const EFFECTIVE_AVOID_STEER_ANGLE = degreesAvoidSteerAngle * (Math.PI / 180); // ラジアンに変換
                 const AI_LATERAL_AVOID_SPEED = 1.7; // AIの横移動速度を固定値に (以前のEFFECTIVE_LATERAL_AVOID_SPEEDから変更)
                 const EFFECTIVE_OBSTACLE_DETECTION_WIDTH_FACTOR = 1.0 * (1 + ratingFactor * 1.6); // ベース検知幅係数 1.0, 最大80%変動
@@ -2221,7 +2229,7 @@ function update() {
 
                 // --- AI回避ロジック用定数 (EFFECTIVE_OBSTACLE_DETECTION_DISTANCE_FORWARD に統合されたため、元の定数定義は不要) ---
                 // const AI_OBSTACLE_DETECTION_WIDTH_FACTOR = 1.0; // EFFECTIVE_OBSTACLE_DETECTION_WIDTH_FACTOR を使用
-                const AI_ANGLE_SMOOTH_FACTOR = 0.1;     // 角度変更の滑らかさ
+                const AI_ANGLE_SMOOTH_FACTOR = 0.05;     // 角度変更の滑らかさ (0.1から変更してより滑らかに)
 
                 // --- AIブロッキングロジック用定数 ---
                 // const AI_BLOCK_DETECTION_DISTANCE_BEHIND = CAR_HEIGHT * 3.0; // レーティングで変動するためEFFECTIVE_を使用
