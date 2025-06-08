@@ -29,7 +29,7 @@ const carDefaults = {
     acceleration: 0.15,
     braking: 0.2,
     friction: 0.02,
-    lateralFriction: 0.95,
+    lateralFriction: 5,
     turnSpeed: 0.07, // 最大のステアリング感度を0.07に設定
     // AI固有のプロパティ (スタート遅延用)
     gameStartTime: 0,
@@ -53,7 +53,8 @@ let chosenPlayerInfo = {
     teamName: null, // Short name for player
     fullName: null, // Full name for player
     rating: null, // プレイヤーのレーティングも保持
-    age: 18 // プレイヤーの初期年齢
+    age: 18, // プレイヤーの初期年齢
+    salary: 0 // プレイヤーの契約金を最初から0に設定
 };
 
 // Add collision recovery rotation properties
@@ -97,16 +98,16 @@ const carImageSources = [
 // === F1ドライバーラインナップ (2023年シーズン後半または2024年を想定) ===
 // 各チームに対応する単一の画像ファイル名 image を追加し、images 配列を削除
 let driverLineups = {
-    "Red Bull":     { drivers: [{name: "M.VER", fullName: "Max Verstappen", rating: 99, aggression: 0.9, age: 26}, {name: "S.PER", fullName: "Sergio Perez", rating: 88, aggression: 0.6, age: 34}], image: "RB_CAR.png", tier: 1, accelerationFactor: 1.05, maxSpeedFactor: 1.01, turnSpeedFactor: 1.02 },
-    "McLaren":      { drivers: [{name: "L.NOR", fullName: "Lando Norris", rating: 92, aggression: 0.7, age: 24}, {name: "O.PIA", fullName: "Oscar Piastri", rating: 89, aggression: 0.5, age: 23}], image: "MCL_CAR.png", tier: 1, accelerationFactor: 1.02, maxSpeedFactor: 1.02, turnSpeedFactor: 1.05 },
-    "Ferrari":      { drivers: [{name: "C.LEC", fullName: "Charles Leclerc", rating: 91, aggression: 0.65, age: 26}, {name: "C.SAI", fullName: "Carlos Sainz", rating: 90, aggression: 0.7, age: 29}], image: "FER_CAR.png", tier: 2, accelerationFactor: 1.00, maxSpeedFactor: 1.01, turnSpeedFactor: 1.00 },
-    "Mercedes":     { drivers: [{name: "L.HAM", fullName: "Lewis Hamilton", rating: 93, aggression: 0.75, age: 39}, {name: "G.RUS", fullName: "George Russell", rating: 89, aggression: 0.6, age: 26}], image: "MER_CAR.png", tier: 2, accelerationFactor: 1.01, maxSpeedFactor: 1.005, turnSpeedFactor: 1.01 },
-    "Aston Martin": { drivers: [{name: "F.ALO", fullName: "Fernando Alonso", rating: 90, aggression: 0.85, age: 42}, {name: "L.STR", fullName: "Lance Stroll", rating: 78, aggression: 0.4, age: 25}], image: "AM_CAR.png", tier: 3, accelerationFactor: 0.98, maxSpeedFactor: 0.99, turnSpeedFactor: 0.98 },
-    "Alpine":       { drivers: [{name: "E.OCO", fullName: "Esteban Ocon", rating: 85, aggression: 0.6, age: 27}, {name: "P.GAS", fullName: "Pierre Gasly", rating: 86, aggression: 0.55, age: 28}], image: "ALP_CAR.png", tier: 3, accelerationFactor: 0.97, maxSpeedFactor: 0.98, turnSpeedFactor: 0.99 },
-    "Williams":     { drivers: [{name: "A.ALB", fullName: "Alexander Albon", rating: 87, aggression: 0.45, age: 28}, {name: "L.SAR", fullName: "Logan Sargeant", rating: 72, aggression: 0.75, age: 23}], image: "WIL_CAR.png", tier: 4, accelerationFactor: 0.87, maxSpeedFactor: 1.00, turnSpeedFactor: 0.95 },
-    "VCARB":        { drivers: [{name: "Y.TSU", fullName: "Yuki Tsunoda", rating: 83, aggression: 0.7, age: 24}, {name: "L.LAW", fullName: "Liam Lawson", rating: 76, aggression: 0.95, age: 22}], image: "VC_CAR.png", tier: 4, accelerationFactor: 0.96, maxSpeedFactor: 0.975, turnSpeedFactor: 0.97 },
-    "Kick Sauber":  { drivers: [{name: "V.BOT", fullName: "Valtteri Bottas", rating: 82, aggression: 0.4, age: 34}, {name: "G.ZHO", fullName: "Guanyu Zhou", rating: 79, aggression: 0.35, age: 25}], image: "SAU_CAR.png", tier: 5, accelerationFactor: 0.92, maxSpeedFactor: 0.95, turnSpeedFactor: 0.96 },
-    "Haas":         { drivers: [{name: "K.MAG", fullName: "Kevin Magnussen", rating: 80, aggression: 0.8, age: 31}, {name: "N.HUL", fullName: "Nico Hulkenberg", rating: 81, aggression: 0.5, age: 36}], image: "HAA_CAR.png", tier: 5, accelerationFactor: 0.93, maxSpeedFactor: 0.95, turnSpeedFactor: 0.94 }
+    "Red Bull":     { drivers: [{name: "M.VER", fullName: "Max Verstappen", rating: 99, aggression: 0.9, age: 26, salary: 0}, {name: "S.PER", fullName: "Sergio Perez", rating: 88, aggression: 0.6, age: 34, salary: 0}], image: "RB_CAR.png", tier: 1, accelerationFactor: 1.05, maxSpeedFactor: 1.01, turnSpeedFactor: 1.02, funds: 1000000 },
+    "McLaren":      { drivers: [{name: "L.NOR", fullName: "Lando Norris", rating: 92, aggression: 0.7, age: 24, salary: 0}, {name: "O.PIA", fullName: "Oscar Piastri", rating: 89, aggression: 0.5, age: 23, salary: 0}], image: "MCL_CAR.png", tier: 1, accelerationFactor: 1.02, maxSpeedFactor: 1.02, turnSpeedFactor: 1.05, funds: 1000000 },
+    "Ferrari":      { drivers: [{name: "C.LEC", fullName: "Charles Leclerc", rating: 91, aggression: 0.65, age: 26, salary: 0}, {name: "C.SAI", fullName: "Carlos Sainz", rating: 90, aggression: 0.7, age: 29, salary: 0}], image: "FER_CAR.png", tier: 2, accelerationFactor: 1.00, maxSpeedFactor: 1.01, turnSpeedFactor: 1.00, funds: 1000000 },
+    "Mercedes":     { drivers: [{name: "L.HAM", fullName: "Lewis Hamilton", rating: 93, aggression: 0.75, age: 39, salary: 0}, {name: "G.RUS", fullName: "George Russell", rating: 89, aggression: 0.6, age: 26, salary: 0}], image: "MER_CAR.png", tier: 2, accelerationFactor: 1.01, maxSpeedFactor: 1.005, turnSpeedFactor: 1.01, funds: 1000000 },
+    "Aston Martin": { drivers: [{name: "F.ALO", fullName: "Fernando Alonso", rating: 90, aggression: 0.85, age: 42, salary: 0}, {name: "L.STR", fullName: "Lance Stroll", rating: 78, aggression: 0.4, age: 25, salary: 0}], image: "AM_CAR.png", tier: 3, accelerationFactor: 0.98, maxSpeedFactor: 0.99, turnSpeedFactor: 0.98, funds: 1000000 },
+    "Alpine":       { drivers: [{name: "E.OCO", fullName: "Esteban Ocon", rating: 85, aggression: 0.6, age: 27, salary: 0}, {name: "P.GAS", fullName: "Pierre Gasly", rating: 86, aggression: 0.55, age: 28, salary: 0}], image: "ALP_CAR.png", tier: 3, accelerationFactor: 0.97, maxSpeedFactor: 0.98, turnSpeedFactor: 0.99, funds: 1000000 },
+    "Williams":     { drivers: [{name: "A.ALB", fullName: "Alexander Albon", rating: 87, aggression: 0.45, age: 28, salary: 0}, {name: "L.SAR", fullName: "Logan Sargeant", rating: 72, aggression: 0.75, age: 23, salary: 0}], image: "WIL_CAR.png", tier: 4, accelerationFactor: 0.87, maxSpeedFactor: 1.00, turnSpeedFactor: 0.95, funds: 1000000 },
+    "VCARB":        { drivers: [{name: "Y.TSU", fullName: "Yuki Tsunoda", rating: 83, aggression: 0.7, age: 24, salary: 0}, {name: "L.LAW", fullName: "Liam Lawson", rating: 76, aggression: 0.95, age: 22, salary: 0}], image: "VC_CAR.png", tier: 4, accelerationFactor: 0.96, maxSpeedFactor: 0.975, turnSpeedFactor: 0.97, funds: 1000000 },
+    "Kick Sauber":  { drivers: [{name: "V.BOT", fullName: "Valtteri Bottas", rating: 82, aggression: 0.4, age: 34, salary: 0}, {name: "G.ZHO", fullName: "Guanyu Zhou", rating: 79, aggression: 0.35, age: 25, salary: 0}], image: "SAU_CAR.png", tier: 5, accelerationFactor: 0.92, maxSpeedFactor: 0.95, turnSpeedFactor: 0.96, funds: 1000000 },
+    "Haas":         { drivers: [{name: "K.MAG", fullName: "Kevin Magnussen", rating: 80, aggression: 0.8, age: 31, salary: 0}, {name: "N.HUL", fullName: "Nico Hulkenberg", rating: 81, aggression: 0.5, age: 36, salary: 0}], image: "HAA_CAR.png", tier: 5, accelerationFactor: 0.93, maxSpeedFactor: 0.95, turnSpeedFactor: 0.94, funds: 1000000 }
 };
 
 // === F2/リザーブドライバープール ===
@@ -114,48 +115,48 @@ let driverLineups = {
 // desiredTierMin/Max: F1昇格時の希望チームティア (1が最高)
 // imageName: チーム画像を使用するため不要に
 let reserveAndF2Drivers = [
-    { name: "T.POU", fullName: "Theo Pourchaire", rating: 78, aggression: 0.6, age: 20, desiredTierMin: 3, desiredTierMax: 5 },
-    { name: "F.DRU", fullName: "Felipe Drugovich", rating: 77, aggression: 0.5, age: 23, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "O.BEA", fullName: "Oliver Bearman", rating: 79, aggression: 0.7, age: 19, desiredTierMin: 3, desiredTierMax: 5 },
-    { name: "J.DOO", fullName: "Jack Doohan", rating: 76, aggression: 0.65, age: 21, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "V.MAR", fullName: "Victor Martins", rating: 75, aggression: 0.55, age: 22, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "A.IWA", fullName: "Ayumu Iwasa", rating: 74, aggression: 0.8, age: 22, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "F.VES", fullName: "Frederik Vesti", rating: 77, aggression: 0.6, age: 22, desiredTierMin: 3, desiredTierMax: 5 },
-    { name: "D.HAU", fullName: "Dennis Hauger", rating: 73, aggression: 0.7, age: 21, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "Z.MAL", fullName: "Zane Maloney", rating: 72, aggression: 0.5, age: 20, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "E.FIT", fullName: "Enzo Fittipaldi", rating: 71, aggression: 0.75, age: 22, desiredTierMin: 5, desiredTierMax: 5 },
-    { name: "R.VCH", fullName: "Richard Verschoor", rating: 70, aggression: 0.4, age: 23, desiredTierMin: 5, desiredTierMax: 5 },
-    { name: "K.MAI", fullName: "Kush Maini", rating: 70, aggression: 0.6, age: 23, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "J.CRA", fullName: "Jak Crawford", rating: 69, aggression: 0.5, age: 19, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "I.HAD", fullName: "Isack Hadjar", rating: 72, aggression: 0.7, age: 19, desiredTierMin: 3, desiredTierMax: 5 },
-    { name: "G.BOR", fullName: "Gabriel Bortoleto", rating: 74, aggression: 0.65, age: 19, desiredTierMin: 3, desiredTierMax: 5 },
-    { name: "A.ANT", fullName: "Andrea Kimi Antonelli", rating: 80, aggression: 0.75, age: 17, desiredTierMin: 2, desiredTierMax: 4 }, // High potential
-    { name: "P.ARO", fullName: "Paul Aron", rating: 68, aggression: 0.55, age: 20, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "F.COL", fullName: "Franco Colapinto", rating: 74, aggression: 0.8, age: 20, desiredTierMin: 5, desiredTierMax: 5 },
-    { name: "P.MAR", fullName: "Pepe Martí", rating: 66, aggression: 0.6, age: 18, desiredTierMin: 5, desiredTierMax: 5 },
-    { name: "T.BAR", fullName: "Taylor Barnard", rating: 65, aggression: 0.45, age: 19, desiredTierMin: 5, desiredTierMax: 5 },
-    { name: "A.NOB", fullName: "Aurelia Nobels", rating: 59, aggression: 0.65, age: 17, desiredTierMin: 5, desiredTierMax: 5 },
-    { name: "N.LAT", fullName: "Nicholas Latifi", rating: 70, aggression: 0.5, age: 28, desiredTierMin: 5, desiredTierMax: 5 },
-    { name: "N.MAZ", fullName: "Nikita Mazepin", rating: 68, aggression: 0.98, age: 25, desiredTierMin: 5, desiredTierMax: 5 },
-    { name: "M.SCH", fullName: "Mick Schumacher", rating: 77, aggression: 0.5, age: 25, desiredTierMin: 3, desiredTierMax: 5 },
-    { name: "N.DEV", fullName: "Nyck de Vries", rating: 75, aggression: 0.6, age: 29, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "A.GIO", fullName: "Antonio Giovinazzi", rating: 76, aggression: 0.55, age: 30, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "R.SHW", fullName: "Robert Shwartzman", rating: 74, aggression: 0.6, age: 24, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "J.DAR", fullName: "Jehan Daruvala", rating: 72, aggression: 0.5, age: 25, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "M.ARM", fullName: "Marcus Armstrong", rating: 71, aggression: 0.65, age: 23, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "C.NOV", fullName: "Clement Novalak", rating: 69, aggression: 0.7, age: 23, desiredTierMin: 5, desiredTierMax: 5 },
-    { name: "R.BOS", fullName: "Ralph Boschung", rating: 68, aggression: 0.4, age: 26, desiredTierMin: 5, desiredTierMax: 5 },
-    { name: "R.NIS", fullName: "Roy Nissany", rating: 65, aggression: 0.75, age: 29, desiredTierMin: 5, desiredTierMax: 5 },
-    { name: "E.TRU", fullName: "Enzo Trulli", rating: 63, aggression: 0.6, age: 19, desiredTierMin: 5, desiredTierMax: 5 }
+    { name: "T.POU", fullName: "Theo Pourchaire", rating: 78, aggression: 0.6, age: 20, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
+    { name: "F.DRU", fullName: "Felipe Drugovich", rating: 77, aggression: 0.5, age: 23, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "O.BEA", fullName: "Oliver Bearman", rating: 79, aggression: 0.7, age: 19, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
+    { name: "J.DOO", fullName: "Jack Doohan", rating: 76, aggression: 0.65, age: 21, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "V.MAR", fullName: "Victor Martins", rating: 75, aggression: 0.55, age: 22, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "A.IWA", fullName: "Ayumu Iwasa", rating: 74, aggression: 0.8, age: 22, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "F.VES", fullName: "Frederik Vesti", rating: 77, aggression: 0.6, age: 22, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
+    { name: "D.HAU", fullName: "Dennis Hauger", rating: 73, aggression: 0.7, age: 21, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "Z.MAL", fullName: "Zane Maloney", rating: 72, aggression: 0.5, age: 20, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "E.FIT", fullName: "Enzo Fittipaldi", rating: 71, aggression: 0.75, age: 22, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "R.VCH", fullName: "Richard Verschoor", rating: 70, aggression: 0.4, age: 23, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "K.MAI", fullName: "Kush Maini", rating: 70, aggression: 0.6, age: 23, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "J.CRA", fullName: "Jak Crawford", rating: 69, aggression: 0.5, age: 19, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "I.HAD", fullName: "Isack Hadjar", rating: 72, aggression: 0.7, age: 19, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
+    { name: "G.BOR", fullName: "Gabriel Bortoleto", rating: 74, aggression: 0.65, age: 19, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
+    { name: "A.ANT", fullName: "Andrea Kimi Antonelli", rating: 80, aggression: 0.75, age: 17, desiredTierMin: 2, desiredTierMax: 4, salary: 0 }, // High potential
+    { name: "P.ARO", fullName: "Paul Aron", rating: 68, aggression: 0.55, age: 20, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "F.COL", fullName: "Franco Colapinto", rating: 74, aggression: 0.8, age: 20, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "P.MAR", fullName: "Pepe Martí", rating: 66, aggression: 0.6, age: 18, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "T.BAR", fullName: "Taylor Barnard", rating: 65, aggression: 0.45, age: 19, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "A.NOB", fullName: "Aurelia Nobels", rating: 59, aggression: 0.65, age: 17, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "N.LAT", fullName: "Nicholas Latifi", rating: 70, aggression: 0.5, age: 28, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "N.MAZ", fullName: "Nikita Mazepin", rating: 68, aggression: 0.98, age: 25, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "M.SCH", fullName: "Mick Schumacher", rating: 77, aggression: 0.5, age: 25, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
+    { name: "N.DEV", fullName: "Nyck de Vries", rating: 75, aggression: 0.6, age: 29, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "A.GIO", fullName: "Antonio Giovinazzi", rating: 76, aggression: 0.55, age: 30, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "R.SHW", fullName: "Robert Shwartzman", rating: 74, aggression: 0.6, age: 24, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "J.DAR", fullName: "Jehan Daruvala", rating: 72, aggression: 0.5, age: 25, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "M.ARM", fullName: "Marcus Armstrong", rating: 71, aggression: 0.65, age: 23, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "C.NOV", fullName: "Clement Novalak", rating: 69, aggression: 0.7, age: 23, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "R.BOS", fullName: "Ralph Boschung", rating: 68, aggression: 0.4, age: 26, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "R.NIS", fullName: "Roy Nissany", rating: 65, aggression: 0.75, age: 29, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "E.TRU", fullName: "Enzo Trulli", rating: 63, aggression: 0.6, age: 19, desiredTierMin: 5, desiredTierMax: 5, salary: 0 }
 ];
 // 追加のF2/リザーブドライバー
 reserveAndF2Drivers.push(
-    { name: "M.WEG", fullName: "Maya Weug", rating: 62, aggression: 0.6, age: 19, desiredTierMin: 5, desiredTierMax: 5 },
-    { name: "N.JUJ", fullName: "Juju Noda", rating: 50, aggression: 0.98, age: 18, desiredTierMin: 5, desiredTierMax: 5 },
-    { name: "D.PIN", fullName: "Doriane Pin", rating: 63, aggression: 0.65, age: 20, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "A.LEC", fullName: "Arthur Leclerc", rating: 73, aggression: 0.65, age: 23, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "L.BRO", fullName: "Luke Browning", rating: 75, aggression: 0.7, age: 22, desiredTierMin: 4, desiredTierMax: 5 },
-    { name: "Z.OSU", fullName: "Zak O'Sullivan", rating: 71, aggression: 0.6, age: 19, desiredTierMin: 4, desiredTierMax: 5 }
+    { name: "M.WEG", fullName: "Maya Weug", rating: 62, aggression: 0.6, age: 19, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "N.JUJ", fullName: "Juju Noda", rating: 50, aggression: 0.98, age: 18, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "D.PIN", fullName: "Doriane Pin", rating: 63, aggression: 0.65, age: 20, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "A.LEC", fullName: "Arthur Leclerc", rating: 73, aggression: 0.65, age: 23, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "L.BRO", fullName: "Luke Browning", rating: 75, aggression: 0.7, age: 22, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "Z.OSU", fullName: "Zak O'Sullivan", rating: 71, aggression: 0.6, age: 19, desiredTierMin: 4, desiredTierMax: 5, salary: 0 }
 );
 
 // carImageSources に含まれるべき正しいファイル名リスト (driverLineups と同期確認用)
@@ -372,6 +373,34 @@ let offeredTeams = []; // オファーされたチームのリスト
 let careerSeasonEndScrollY = 0; // ポイント表示画面のスクロールYオフセット
 let previousSeasonPointsForDisplay = {}; // マシンパフォーマンス画面表示用の前シーズンポイント
 let careerMachinePerformanceScrollY = 0; // マシンパフォーマンス画面のスクロールYオフセット
+// === マシンアップグレード設定 ===
+const UPGRADE_COST_ACCEL_BASE = 60000; // 加速アップグレードの基本コスト (50000から増加)
+const UPGRADE_COST_SPEED_BASE = 90000; // 最高速アップグレードの基本コスト (75000から増加)
+const UPGRADE_COST_FACTOR_INCREMENT = 0.12; // アップグレード毎のコスト増加係数 (0.1から増加)
+
+// === 資金獲得テーブル (順位別) ===
+const fundsByRank = [
+    700000, // 1st (500000から減額)
+    600000, // 2nd (450000から減額)
+    520000, // 3rd (400000から減額)
+    440000, // 4th (350000から減額)
+    380000, // 5th (300000から減額)
+    320000, // 6th (250000から減額)
+    260000, // 7th (200000から減額)
+    220000, // 8th (180000から減額)
+    190000,  // 9th (160000から減額)
+    160000,  // 10th (140000から減額)
+    150000,  // 11th (120000から減額)
+    140000,  // 12th (100000から減額)
+    130000,  // 13th (90000から減額)
+    120000,  // 14th (80000から減額)
+    110000,  // 15th (70000から減額)
+    100000,  // 16th (60000から減額)
+    90000,  // 17th (50000から減額)
+    80000,  // 18th (40000から減額)
+    70000,  // 19th (30000から減額)
+    60000   // 20th (20000から減額)
+];
 let nextSeasonTiersForOfferDisplay = {}; // オファー表示用の来シーズンのTier情報を保持
 let playerCareerHistory = []; // 各シーズンの成績などを記録する配列
 
@@ -457,11 +486,42 @@ function loadSaveSlotsMetadata() {
     }
 }
 
+// === ドライバー契約金計算関数 ===
+function calculateDriverSalary(rating) {
+    let totalSalary = 0;
+
+    if (rating >= 50) {
+        const baseSalaryAt50 = 10000; // レート50の時の基本給与
+        const salaryIncreasePerRatingPoint = 29800; // レート50を超えた場合の1ポイントあたりの給与増加額
+                                                  // (1500000 - 10000) / (100 - 50) = 1490000 / 50 = 29800
+        totalSalary = baseSalaryAt50 + (rating - 50) * salaryIncreasePerRatingPoint;
+    } else {
+        // レーティング50未満は契約金0
+        totalSalary = 0;
+    }
+
+    return Math.floor(totalSalary / 10000) * 10000; // 10,000ドル単位に丸める
+}
+
+// === 全ドライバーの契約金を初期化する関数 ===
+function initializeDriverSalaries() {
+    for (const teamName in driverLineups) {
+        driverLineups[teamName].drivers.forEach(driver => {
+            driver.salary = calculateDriverSalary(driver.rating);
+        });
+    }
+    reserveAndF2Drivers.forEach(driver => {
+        driver.salary = calculateDriverSalary(driver.rating);
+    });
+    console.log("Driver salaries initialized.");
+}
+
 // 画像ロード完了後にゲームを開始するヘルパー関数
 function checkAllImagesLoadedAndStartGame() {
     if (loadedImagesCount === imagesToLoad && !allImagesLoaded) { // 複数回呼び出されるのを防ぐ
         allImagesLoaded = true;
         initializeRaceSettings(currentRaceInSeason); // 初回レース設定
+        initializeDriverSalaries(); // ドライバーの契約金を初期化
         loadSaveSlotsMetadata(); // セーブスロット情報をロード
         gameState = 'title_screen'; // タイトル画面から開始
         // initializeCars(); // ドライバー選択後に呼び出す
@@ -1165,28 +1225,32 @@ canvas.addEventListener('click', (event) => {
                 chosenPlayerInfo.teamName = teamName; // ドライバー選択画面でこのチームをデフォルト表示するため
                 // chosenPlayerInfo.driverName はキャリアモードで既に設定されているので、ここではnullにしない
                 chosenPlayerInfo.imageName = driverLineups[teamName].image; // チームの画像名を設定
-                // chosenPlayerInfo.rating は、チームのセカンドドライバーのものを初期値とする
-                // chosenPlayerInfo.fullName はキャリアモードで設定済みなので変更しない
-                
+
                 // --- 自動的にセカンドドライバーのスロットに割り当てる ---
                 const teamData = driverLineups[careerPlayerTeamName];
                 if (teamData && teamData.drivers.length > 1) {
-                    // imageName は既にチーム画像で設定済み
                     chosenPlayerInfo.rating = teamData.drivers[1].rating; // セカンドドライバーのレーティング
                 } else if (teamData && teamData.drivers.length === 1) { // ドライバーが1人のチームの場合
-                    // imageName は既にチーム画像で設定済み
                     chosenPlayerInfo.rating = teamData.drivers[0].rating;
                 } else {
-                    // フォールバック (ありえないはずだが念のため)
                     console.error(`Team data for ${careerPlayerTeamName} not found or has no drivers.`);
                     gameState = 'driver_selection'; // エラー時はドライバー選択に戻す
                     return;
                 }
+                // chosenPlayerInfo.salary = calculateDriverSalary(chosenPlayerInfo.rating); // 契約金を計算 ← プレイヤーは常に0なので不要
+                chosenPlayerInfo.salary = 0; // プレイヤーの契約金を0に設定
 
-                alert(`${careerPlayerTeamName} と契約し、自動的にスロットが割り当てられました。\nレースを開始します！`);
-                // initializeCars(); // マシンパフォーマンス画面の後に移動
-                gameState = 'career_machine_performance'; // マシンパフォーマンス画面へ
-                console.log(`Career mode: Team ${careerPlayerTeamName} selected. Player assigned to team with image ${chosenPlayerInfo.imageName}. Starting race sequence.`);
+                if (driverLineups[careerPlayerTeamName].funds >= chosenPlayerInfo.salary) {
+                    // driverLineups[careerPlayerTeamName].funds -= chosenPlayerInfo.salary; // 資金控除はオファー受諾画面へ移動
+                    alert(`${careerPlayerTeamName} を選択しました。給与は $${chosenPlayerInfo.salary.toLocaleString()} です。\nパフォーマンス画面へ進み、最終確認後に契約となります。`);
+                    // initializeCars(); // マシンパフォーマンス画面の後に移動
+                    gameState = 'career_machine_performance'; // マシンパフォーマンス画面へ
+                    console.log(`Career mode: Team ${careerPlayerTeamName} selected. Player salary $${chosenPlayerInfo.salary}. Proceeding to machine performance.`);
+                } else {
+                    alert(`${careerPlayerTeamName} はあなたの給与 $${chosenPlayerInfo.salary.toLocaleString()} を支払うための資金が不足しています (現在の資金: $${driverLineups[careerPlayerTeamName].funds.toLocaleString()})。\n他のチームを選択してください。`);
+                    console.warn(`Career mode: Team ${careerPlayerTeamName} (Funds: $${driverLineups[careerPlayerTeamName].funds}) cannot afford player salary $${chosenPlayerInfo.salary}.`);
+                    // gameState は変更せず、再度チーム選択を促す
+                }
                 return;
             }
         });
@@ -1316,6 +1380,7 @@ canvas.addEventListener('click', (event) => {
                 console.log("Before development/aging: Player Age:", chosenPlayerInfo.age, "Rating:", chosenPlayerInfo.rating);
                 handleDriverDevelopmentAndAging(); // グローバル変数を直接更新
                 console.log("After development/aging: Player Age:", chosenPlayerInfo.age, "Rating:", chosenPlayerInfo.rating);
+                chosenPlayerInfo.salary = 0; // プレイヤーの契約金を0に設定
                 // === 成長・加齢処理ここまで ===
                 gameState = 'career_team_offers'; // チームオファー画面へ
             }
@@ -1324,14 +1389,14 @@ canvas.addEventListener('click', (event) => {
     }
 
     if (gameState === 'career_team_offers' && careerPlayerTeamName) { // careerPlayerTeamName は前シーズンのもの
-        let offerWasClicked = false; // オファーがクリックされたかどうかのフラグ
+        let offerSuccessfullyAccepted = false; // オファーが正常に承諾されたかどうかのフラグ
         const buttonHeight = 50;
         const buttonPadding = 15;
         const buttonWidth = 350;
         const startY = 120;
 
         offeredTeams.forEach((teamName, index) => {
-            if (offerWasClicked) return; // 既にオファーが処理されていれば、他のオファーの判定はスキップ
+            if (offerSuccessfullyAccepted) return; // 既にオファーが承諾されていれば、他のオファーの判定はスキップ
 
             const buttonX = canvas.width / 2 - buttonWidth / 2;
             const buttonY = startY + index * (buttonHeight + buttonPadding);
@@ -1339,65 +1404,90 @@ canvas.addEventListener('click', (event) => {
             if (mousePos.x >= buttonX && mousePos.x <= buttonX + buttonWidth &&
                 mousePos.y >= buttonY && mousePos.y <= buttonY + buttonHeight) {
 
-                // 前シーズンのチームポイントを保持 (マシンアップグレードとティア更新のため)
-                const previousSeasonTeamPoints = JSON.parse(JSON.stringify(careerTeamSeasonPoints));
-                previousSeasonPointsForDisplay = previousSeasonTeamPoints; // マシンパフォーマンス表示用に前シーズンのポイントを保持
-
-                // 新しいシーズンへの準備
-                currentSeasonNumber++;
-                currentRaceInSeason = 1;
-                careerDriverSeasonPoints = {}; // ポイントリセット
-                careerTeamSeasonPoints = {};   // チームポイントもリセット
-                previousRaceFinishingOrder = []; // 新シーズンのため前レース結果をリセット
-
-                careerPlayerTeamName = teamName; // 新しいチームを設定
-                chosenPlayerInfo.teamName = teamName;
-                chosenPlayerInfo.imageName = driverLineups[teamName].image; // 新しいチームの画像名
-                // chosenPlayerInfo.rating は新しいチームのセカンドドライバーのものを初期値とする
-                // chosenPlayerInfo.age は handleDriverDevelopmentAndAging で更新済み
-                // chosenPlayerInfo.driverName と fullName は維持
-
-                // === AI移籍とマシンパフォーマンス更新をここで行う ===
-                // driverLineups は handleDriverDevelopmentAndAging で更新済み
-                // careerTeamSeasonPoints は前シーズンのものがまだ残っているはず
-                // playerChosenTeamName は新しいチーム名 (teamName)
-                // chosenPlayerInfo.driverName は更新済み
-                // reserveAndF2Drivers は更新済み
-                driverLineups = handleAiDriverTransfers(
-                    driverLineups,
-                    previousSeasonTeamPoints, // 保持しておいた前シーズンのポイントを使用
-                    teamName,               // 新しいプレイヤーのチーム名
-                    chosenPlayerInfo.driverName,
-                    reserveAndF2Drivers
-                );
-                offerWasClicked = true; // フラグを立てる
-
-                initializeRaceSettings(currentRaceInSeason);
-                
-                // チーム選択後、セカンドドライバーのレーティングをプレイヤーの初期レーティングとする
-                const newTeamData = driverLineups[careerPlayerTeamName];
-                if (newTeamData && newTeamData.drivers.length > 0) { // imageNameは設定済み
-                    // プレイヤーのレーティングは handleDriverDevelopmentAndAging で更新された値を維持する
-                    // chosenPlayerInfo.rating = (newTeamData.drivers[1] || newTeamData.drivers[0]).rating; 
-                    // chosenPlayerInfo.age は既に更新されているので、ここではチームのドライバーの年齢を上書きしない
+                // プレイヤーの契約金を計算 (新しいシーズンに基づいて)
+                // currentSeasonNumber はこの時点では終了したシーズンを指す
+                let playerContractualSalary;
+                if ((currentSeasonNumber + 1) > 1) { // 新しいシーズンが2シーズン目以降の場合
+                    playerContractualSalary = calculateDriverSalary(75);
+                } else {
+                    // 新しいシーズンが1シーズン目の場合 (通常オファー画面からはこのルートに来ないはず)
+                    playerContractualSalary = 0;
                 }
 
-                // 新しいシーズンへの準備 (移籍処理後)
-                console.log(`INFO: You have signed with ${teamName} for Season ${currentSeasonNumber}!`);
-                gameState = 'career_machine_performance'; // マシンパフォーマンス画面へ
-                console.log(`Starting new season ${currentSeasonNumber} with team ${teamName}.`);
+                if (driverLineups[teamName].funds >= playerContractualSalary) {
+                    offerSuccessfullyAccepted = true; // 契約成立フラグ
 
-                playerLastSeasonRank = 0; // 新シーズンに向けてリセット
-                offeredTeams = [];       // オファー情報をクリア
+                    // 前シーズンのチームポイントを保持 (マシンアップグレードとティア更新のため)
+                    const previousSeasonTeamPoints = JSON.parse(JSON.stringify(careerTeamSeasonPoints));
+                    previousSeasonPointsForDisplay = previousSeasonTeamPoints; // マシンパフォーマンス表示用に前シーズンのポイントを保持
+
+                    // 新しいシーズンへの準備
+                    currentSeasonNumber++;
+                    currentRaceInSeason = 1;
+                    careerDriverSeasonPoints = {}; // ポイントリセット
+                    careerTeamSeasonPoints = {};   // チームポイントもリセット
+                    previousRaceFinishingOrder = []; // 新シーズンのため前レース結果をリセット
+
+                    careerPlayerTeamName = teamName; // 新しいチームを設定
+                    chosenPlayerInfo.teamName = teamName;
+                    chosenPlayerInfo.imageName = driverLineups[teamName].image; // 新しいチームの画像名
+                    chosenPlayerInfo.salary = playerContractualSalary; // プレイヤーの契約情報を更新
+
+                    driverLineups[teamName].funds -= playerContractualSalary; // プレイヤーの給与は0なので、実質引かれない
+                    console.log(`Player ${chosenPlayerInfo.driverName} signed with ${teamName}. Salary: $${playerContractualSalary.toLocaleString()} deducted. New team funds: $${driverLineups[teamName].funds.toLocaleString()}`);
+
+                    // AI移籍とマシンパフォーマンス更新はオファー承諾後にまとめて行う
+
+                } else {
+                    alert(`チーム ${teamName} はあなたの契約金 $${playerContractualSalary.toLocaleString()} を支払う資金がありません (現在の資金: $${driverLineups[teamName].funds.toLocaleString()})。このチームとは契約できません。`);
+                    console.warn(`Team ${teamName} (Funds: $${driverLineups[teamName].funds.toLocaleString()}) cannot afford player ${chosenPlayerInfo.driverName} (Salary: $${playerContractualSalary.toLocaleString()}). Contract not signed.`);
+                    // offerSuccessfullyAccepted は false のまま。gameState も変更しない。
+                    return; // このオファーの処理を中断
+                }
             }
         });
 
-        if (offerWasClicked) {
+        if (offerSuccessfullyAccepted) {
+            // === AI移籍とマシンパフォーマンス更新をここで行う ===
+            // driverLineups は handleDriverDevelopmentAndAging で更新済み
+            // careerTeamSeasonPoints は前シーズンのものが previousSeasonPointsForDisplay に保持されている
+            // careerPlayerTeamName は新しいチーム名
+            // chosenPlayerInfo.driverName は更新済み
+            // reserveAndF2Drivers は更新済み
+            driverLineups = handleAiDriverTransfers(
+                driverLineups,
+                previousSeasonPointsForDisplay, // 保持しておいた前シーズンのポイントを使用
+                careerPlayerTeamName,           // 新しいプレイヤーのチーム名
+                chosenPlayerInfo.driverName,
+                reserveAndF2Drivers
+            );
+
+            // === シーズン終了ボーナス: 全チームに資金を付与 ===
+            console.log("--- Awarding end-of-season funds to all teams ---");
+            for (const teamKey in driverLineups) {
+                if (driverLineups.hasOwnProperty(teamKey)) {
+                    driverLineups[teamKey].funds += 1000000;
+                    console.log(`Team ${teamKey} received $1,000,000. New funds: $${driverLineups[teamKey].funds.toLocaleString()}`);
+                }
+            }
+            console.log("--- End-of-season funds awarded ---");
+
+            initializeRaceSettings(currentRaceInSeason);
+
+            // チーム選択後、プレイヤーのレーティングと年齢は handleDriverDevelopmentAndAging で更新された値を維持
+
+            // 新しいシーズンへの準備 (移籍処理後)
+            console.log(`INFO: You have signed with ${careerPlayerTeamName} for Season ${currentSeasonNumber}!`);
+            gameState = 'career_machine_performance'; // マシンパフォーマンス画面へ
+            console.log(`Starting new season ${currentSeasonNumber} with team ${careerPlayerTeamName}.`);
+
+            playerLastSeasonRank = 0; // 新シーズンに向けてリセット
+            offeredTeams = [];       // オファー情報をクリア
             return; // オファーが処理された場合、メインのクリックハンドラから抜ける
         }
 
         // オファーがクリックされず、かつオファーリストが空の場合の処理 (変更なし)
-        if (offeredTeams.length === 0 && !offerWasClicked) {
+        if (offeredTeams.length === 0 && !offerSuccessfullyAccepted) {
             // TODO: キャリア終了処理 or 強制的に下位チームへなど
             alert("No teams offered a contract. Career Over (WIP).");
             gameState = 'driver_selection'; // とりあえずドライバー選択に戻る
@@ -1409,6 +1499,23 @@ canvas.addEventListener('click', (event) => {
         // isTransitioningToNewSeason は、オファー画面から来たかどうかで判定
         // currentRaceInSeason はオファー受諾時またはシーズン中の次のレース準備時に設定されている
         // currentSeasonNumber はオファー受諾時にインクリメントされている
+
+        // キャリア初期のチーム選択からの遷移の場合、ここで契約金を処理
+        if (currentSeasonNumber === 1 && currentRaceInSeason === 1 && !offeredTeams.length) { // offeredTeamsが空なら初期選択
+            // chosenPlayerInfo.salary はチーム選択時に0に設定済み
+            // 契約に使用するプレイヤーの給与は常に0とする
+            const playerContractualSalary = 0;
+            if (driverLineups[careerPlayerTeamName].funds >= playerContractualSalary) {
+                driverLineups[careerPlayerTeamName].funds -= playerContractualSalary; // プレイヤーの給与は0なので、実質引かれない
+                alert(`${careerPlayerTeamName} と正式に契約しました。給与 $${playerContractualSalary.toLocaleString()} が差し引かれました。\n現在のチーム資金: $${driverLineups[careerPlayerTeamName].funds.toLocaleString()}`);
+                console.log(`Career mode: Player ${chosenPlayerInfo.driverName} officially signed with ${careerPlayerTeamName}. Salary $${playerContractualSalary} deducted. Funds: $${driverLineups[careerPlayerTeamName].funds}`);
+            } else {
+                // このケースは通常、チーム選択画面でブロックされるはずだが、念のため
+                alert(`エラー: ${careerPlayerTeamName} はあなたの給与を支払えません。チーム選択に戻ります。`);
+                gameState = 'career_team_selection';
+                return;
+            }
+        }
 
         // マシンパフォーマンスの更新とAI移籍は、この画面に来る前 (オファー受諾時) に完了している。
         // よって、ここでの handleAiDriverTransfers の呼び出しは不要。
@@ -1424,6 +1531,46 @@ canvas.addEventListener('click', (event) => {
         careerMachinePerformanceNextButton.isVisible = false;
         return;
     }
+    // マシンパフォーマンス画面でのアップグレードボタンクリック処理
+    if (gameState === 'career_machine_performance' && careerPlayerTeamName) {
+        const upgradeButtonWidth = 80;
+        const upgradeButtonHeight = 18; // barHeight と同じ
+        const barHeight = 18; const barGap = 4; const teamGap = 12;
+        const totalTeamBlockHeight = barHeight * 2 + barGap + teamGap;
+        const listStartX = 50;
+        const teamNameDisplayWidth = 110;
+        const spaceAfterTeamName = 10;
+        const barChartRenderStartX = listStartX + teamNameDisplayWidth + spaceAfterTeamName;
+        const graphAreaY = 120;
+        const barChartRenderWidth = canvas.width - barChartRenderStartX - listStartX;
+
+        const playerTeamData = driverLineups[careerPlayerTeamName];
+        const playerTeamIndex = Object.keys(driverLineups).sort((a, b) => (previousSeasonPointsForDisplay[b] || 0) - (previousSeasonPointsForDisplay[a] || 0) || driverLineups[a].tier - driverLineups[b].tier).indexOf(careerPlayerTeamName);
+        const playerTeamY = graphAreaY + playerTeamIndex * totalTeamBlockHeight - careerMachinePerformanceScrollY;
+
+        // 加速アップグレードボタンのY座標
+        const accelUpgradeButtonY = playerTeamY;
+        // 最高速アップグレードボタンのY座標
+        const speedUpgradeButtonY = playerTeamY + barHeight + barGap;
+
+        const upgradeButtonX = barChartRenderStartX + barChartRenderWidth + 10; // バーの右側に配置
+
+        // 加速アップグレードボタンのクリック判定
+        if (mousePos.x >= upgradeButtonX && mousePos.x <= upgradeButtonX + upgradeButtonWidth &&
+            mousePos.y >= accelUpgradeButtonY && mousePos.y <= accelUpgradeButtonY + upgradeButtonHeight) {
+            handleUpgrade(careerPlayerTeamName, 'acceleration');
+            return;
+        }
+
+        // 最高速アップグレードボタンのクリック判定
+        if (mousePos.x >= upgradeButtonX && mousePos.x <= upgradeButtonX + upgradeButtonWidth &&
+            mousePos.y >= speedUpgradeButtonY && mousePos.y <= speedUpgradeButtonY + upgradeButtonHeight) {
+            handleUpgrade(careerPlayerTeamName, 'maxSpeed');
+            return;
+        }
+    }
+
+
     // gameState === 'career_roster' の場合のクリック処理 (シーズン開始ボタン)
     if (gameState === 'career_roster' && careerStartSeasonButton.isClicked(mousePos.x, mousePos.y)) {
         gameState = 'signal_sequence'; // シグナルシーケンスへ
@@ -2196,10 +2343,10 @@ function update() {
                 // --- AI回避ロジック用実効値 (レーティングで変動) ---
                 const EFFECTIVE_OBSTACLE_DETECTION_DISTANCE_FORWARD = (CAR_HEIGHT * 5) * (1 + ratingFactor * 2.4); // ベース距離 CAR_HEIGHT * 5, 最大120%変動 (元の値)
                 
-                // 新しい EFFECTIVE_AVOID_STEER_ANGLE の計算 (1度から20度の範囲)
-                // レーティング 100 で 1度、レーティング 50 で 20度 になるように線形補間
-                // 式: 角度(度) = -0.38 * レーティング + 39
-                let degreesAvoidSteerAngle = -0.38 * aiCar.rating + 39;
+                // EFFECTIVE_AVOID_STEER_ANGLE の計算 (1度から20度の範囲)
+                // レーティングが高いほど旋回角度が大きくなるように変更
+                // レーティング 50 で 1度、レーティング 100 で 20度 になるように線形補間
+                let degreesAvoidSteerAngle = 0.38 * aiCar.rating - 18;
                 // 角度を 1度 から 20度 の範囲にクランプ
                 degreesAvoidSteerAngle = Math.max(1, Math.min(degreesAvoidSteerAngle, 20));
                 const EFFECTIVE_AVOID_STEER_ANGLE = degreesAvoidSteerAngle * (Math.PI / 180); // ラジアンに変換
@@ -2247,6 +2394,7 @@ function update() {
                 let strategicLaneChoiceMade = false; // 戦略的レーン選択を行ったか
                 let blockingAttemptMade = false; // ブロッキング試行を行ったかどうかのフラグ
                 let isEvadingWallProximity = false; // 壁際回避中かどうかのフラグ
+                let randomLaneChangeMade = false; // 低レートAIのランダムレーン変更フラグ
 
                 // ヘルパー関数: X座標からレーンインデックスを取得
                 const getLaneIndex = (xPos) => {
@@ -2398,8 +2546,29 @@ function update() {
                 }
                 // --- AIブロッキングロジックここまで ---
 
-                // --- 4. 壁際回避ロジック (上記のいずれも作動していない場合) ---
+                // --- 4. 低レーティングAIのランダムレーン変更 (回避、戦略、ブロックのいずれも行われなかった場合) ---
                 if (!isAvoidingObstacle && !strategicLaneChoiceMade && !blockingAttemptMade) {
+                    const RANDOM_LANE_CHANGE_PROBABILITY_BASE = 0.1; // ランダム変更の基本確率
+                    // レーティングが低いほど確率が上がる (例: 85で影響が出始め、50で最大影響)
+                    const ratingEffectOnRandomChange = Math.max(0, (85 - aiCar.rating) / 35);
+                    const randomLaneChangeProbability = RANDOM_LANE_CHANGE_PROBABILITY_BASE * ratingEffectOnRandomChange;
+
+                    if (Math.random() < randomLaneChangeProbability) {
+                        const currentAiLane = getLaneIndex(aiCar.x);
+                        let potentialRandomLanes = [];
+                        if (currentAiLane > 0) potentialRandomLanes.push(currentAiLane - 1); // 左へ
+                        if (currentAiLane < NUM_AI_LANES - 1) potentialRandomLanes.push(currentAiLane + 1); // 右へ
+
+                        if (potentialRandomLanes.length > 0) {
+                            const randomTargetLane = potentialRandomLanes[Math.floor(Math.random() * potentialRandomLanes.length)];
+                            desiredX = courseLeftEdgeX + AI_LANE_WIDTH * randomTargetLane + AI_LANE_WIDTH / 2;
+                            randomLaneChangeMade = true;
+                            console.log(`AI ${aiCar.driverName} (Rating: ${aiCar.rating}) making random lane change to lane ${randomTargetLane}. Prob: ${randomLaneChangeProbability.toFixed(3)}`);
+                        }
+                    }
+                }
+                // --- 5. 壁際回避ロジック (上記のいずれも作動していない場合) ---
+                if (!isAvoidingObstacle && !strategicLaneChoiceMade && !blockingAttemptMade && !randomLaneChangeMade) {
                     const WALL_PROXIMITY_THRESHOLD_AI = CAR_WIDTH * 0.65;
 
                     // 左壁への接近判定ロジックは削除されました。
@@ -2415,7 +2584,8 @@ function update() {
                                 // ... (省略: isLaneSafe のチェック) ...
                                 // 簡略化のため、上記左壁の isLaneSafe チェックを再利用すると仮定
                                 // 実際には右壁用の targetEvasionLane を見つけるロジックが必要
-                                // ここでは、もし安全なレーンが見つかったら isEvadingWallProximity = true とすると仮定
+                                // desiredX を設定するロジックが必要 (例: desiredX = courseLeftEdgeX + AI_LANE_WIDTH * potentialLane + AI_LANE_WIDTH / 2;)
+                                // isEvadingWallProximity フラグは直接使われなくなるが、デバッグ用に残しても良い
                                 isEvadingWallProximity = true; // 仮の代入
                             } else { break; }
                         }
@@ -2600,6 +2770,20 @@ function update() {
                     console.warn(`Could not store previous race finishing order for next grid. Expected ${NUM_CARS} ranked cars, found ${finishedCarsSortedForGrid.length}. Next race will use default grid.`);
                     previousRaceFinishingOrder = []; // 不完全な場合はリセットしてデフォルトグリッドにフォールバック
                 };
+
+                // --- 資金加算処理 (キャリアモードの場合のみ) ---
+                cars.forEach(car => {
+                    if (car.hasFinished && car.finalRank > 0 && car.finalRank <= fundsByRank.length) {
+                        const earnedFunds = fundsByRank[car.finalRank - 1];
+                        if (driverLineups[car.teamName]) {
+                            if (driverLineups[car.teamName].funds === undefined) {
+                                driverLineups[car.teamName].funds = 0;
+                            }
+                            driverLineups[car.teamName].funds += earnedFunds;
+                            console.log(`Team ${car.teamName} (Driver: ${car.driverName}, Rank: ${car.finalRank}) earned ${earnedFunds} funds. Total funds: ${driverLineups[car.teamName].funds}`);
+                        }
+                    }
+                });
             }
             // --- ポイント加算処理ここまで ---
 
@@ -2743,10 +2927,10 @@ function update() {
             }
         }
 
-        // Apply 90% speed reduction upon collision (moved from inside hitWall block)
-        if (hitWall) {
-             car.speed *= 0.9; // Reduce speed to 90% upon collision
-        }
+        // Apply 90% speed reduction upon collision (moved from inside hitWall block) - 減速処理を削除
+        // if (hitWall) {
+        //      car.speed *= 0.9; // Reduce speed to 90% upon collision
+        // }
     }
 
     // 通常のレース中のカメラ追従ロジック
@@ -4053,6 +4237,12 @@ function drawCareerMachinePerformanceScreen() {
     ctx.textAlign = 'center';
     ctx.fillText(`MACHINE PERFORMANCE - SEASON ${currentSeasonNumber}`, canvas.width / 2, 60);
 
+    // チーム資金表示
+    ctx.font = 'bold 18px Arial';
+    ctx.fillStyle = 'gold';
+    ctx.textAlign = 'left';
+    ctx.fillText(`Team Funds: $${driverLineups[careerPlayerTeamName]?.funds.toLocaleString() || 0}`, 50, 95);
+
     // グラフ描画エリア設定
     ctx.save(); // グラフ描画エリアのクリッピングのために保存
 
@@ -4139,12 +4329,34 @@ function drawCareerMachinePerformanceScreen() {
             const barW = ((factor - minValue) / valueRange) * barChartRenderWidth;
             ctx.fillStyle = color;
             // バーの描画開始X座標は barChartRenderStartX
-            ctx.fillRect(barChartRenderStartX, teamY + yOffset, Math.max(0, barW), barHeight);
+            const currentBarY = teamY + yOffset;
+            ctx.fillRect(barChartRenderStartX, currentBarY, Math.max(0, barW), barHeight);
             ctx.fillStyle = 'white';
             ctx.font = '11px Arial';
             ctx.textAlign = 'left'; // 数値は棒の右に左寄せ
             ctx.fillText((value || 1.0).toFixed(3), barChartRenderStartX + Math.max(0, barW) + 5, teamY + yOffset + barHeight / 2 + 4);
+
+            // プレイヤーチームの場合のみアップグレードボタンを描画
+            if (teamName === careerPlayerTeamName) {
+                const upgradeButtonX = barChartRenderStartX + barChartRenderWidth + 10;
+                const upgradeButtonWidth = 80;
+                const upgradeCost = calculateUpgradeCost(teamName, label.toLowerCase().includes('accel') ? 'acceleration' : 'maxSpeed');
+
+                ctx.fillStyle = 'rgba(0, 200, 0, 0.7)';
+                ctx.fillRect(upgradeButtonX, currentBarY, upgradeButtonWidth, barHeight);
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 10px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`UPGRADE`, upgradeButtonX + upgradeButtonWidth / 2, currentBarY + barHeight / 2 - 2);
+                ctx.font = '9px Arial';
+                ctx.fillText(`($${upgradeCost.toLocaleString()})`, upgradeButtonX + upgradeButtonWidth / 2, currentBarY + barHeight / 2 + 8);
+            }
         };
+
+        // グラフが描画範囲内にない場合は描画をスキップ (軽量化)
+        if (teamY + totalTeamBlockHeight < graphAreaY || teamY > graphAreaY + graphAreaHeight) {
+            return; // continue相当
+        }
         drawBar(teamData.accelerationFactor, 0, 'rgba(100, 100, 255, 0.8)', "Accel");
         drawBar(teamData.maxSpeedFactor, barHeight + barGap, 'rgba(255, 100, 100, 0.8)', "Speed");
     });
@@ -4211,6 +4423,42 @@ function drawCareerMachinePerformanceScreen() {
     if (scrollParamsMachine.maxScroll > 0) {
         drawScrollbar(ctx, scrollParamsMachine.x, scrollParamsMachine.trackY, scrollParamsMachine.trackHeight, scrollParamsMachine.thumbY, scrollParamsMachine.thumbHeight);
     }
+}
+
+// アップグレードコスト計算関数
+function calculateUpgradeCost(teamName, upgradeType) {
+    const teamData = driverLineups[teamName];
+    if (!teamData) return Infinity;
+
+    let baseCost = 0;
+    let currentValue = 0;
+
+    if (upgradeType === 'acceleration') {
+        baseCost = UPGRADE_COST_ACCEL_BASE;
+        currentValue = teamData.accelerationFactor || 1.0;
+    } else if (upgradeType === 'maxSpeed') {
+        baseCost = UPGRADE_COST_SPEED_BASE;
+        currentValue = teamData.maxSpeedFactor || 1.0;
+    } else {
+        return Infinity;
+    }
+    // 性能値が1.0からどれだけ離れているかでコストを調整 (例: 1.0からの差分の二乗に比例)
+    // 1.0 を超えるほど高くなるようにする
+    const deviationFromBase = Math.max(0, currentValue - 1.0);
+    return Math.floor(baseCost * (1 + deviationFromBase * 5 + Math.pow(deviationFromBase * 10, 2))); // 指数関数的に増加
+}
+
+// アップグレード処理関数
+function handleUpgrade(teamName, upgradeType) {
+    const cost = calculateUpgradeCost(teamName, upgradeType);
+    // if (driverLineups[teamName].funds >= cost) { // 資金チェックをスキップ
+        // driverLineups[teamName].funds -= cost; // 資金を減らさない
+        const increment = upgradeType === 'acceleration' ? 0.005 : 0.002; // 加速は0.005、最高速は0.002ずつ増加
+        driverLineups[teamName][upgradeType === 'acceleration' ? 'accelerationFactor' : 'maxSpeedFactor'] = parseFloat((driverLineups[teamName][upgradeType === 'acceleration' ? 'accelerationFactor' : 'maxSpeedFactor'] + increment).toFixed(4));
+        alert(`${upgradeType === 'acceleration' ? 'Acceleration' : 'Max Speed'} upgraded for ${teamName}!`); // コスト表示を削除
+    // } else {
+        // alert(`Not enough funds to upgrade ${upgradeType === 'acceleration' ? 'Acceleration' : 'Max Speed'}. Need $${cost.toLocaleString()}, but have $${driverLineups[teamName].funds.toLocaleString()}.`);
+    // }
 }
 
 // ====== チームオファー関連の関数 ======
@@ -4537,6 +4785,7 @@ function handleAiDriverTransfers(currentLineups, seasonPoints, playerChosenTeamN
                 rating: driver.rating,
                 aggression: driver.aggression,
                 age: driver.age,
+                salary: driver.salary, // Add salary
                 currentTeamName: teamName,
                 currentTeamTier: workingLineups[teamName].tier,
                 points: seasonPoints[driver.name] || 0,
@@ -4562,6 +4811,7 @@ function handleAiDriverTransfers(currentLineups, seasonPoints, playerChosenTeamN
                 rating: rd.rating,
                 aggression: rd.aggression,
                 age: rd.age, // imageName は不要
+                salary: rd.salary, // Add salary
                 currentTeamName: null, // F1チームには所属していない
                 currentTeamTier: rd.desiredTierMin, // 移籍市場での評価用ティア
                 points: 0, // F1での前シーズンポイントは0
@@ -4584,6 +4834,7 @@ function handleAiDriverTransfers(currentLineups, seasonPoints, playerChosenTeamN
         rating: chosenPlayerInfo.rating,
         aggression: chosenPlayerInfo.aggression !== undefined ? chosenPlayerInfo.aggression : carDefaults.aggression,
         age: chosenPlayerInfo.age,
+        salary: chosenPlayerInfo.salary || calculateDriverSalary(chosenPlayerInfo.rating), // Add salary
         currentTeamName: playerChosenTeamName, // Player's chosen team for the new season
         currentTeamTier: tierForPlayerNewTeam, // Tier of the player's new team
         points: seasonPoints[playerDriverShortName] || 0, // Player's points from the last season
@@ -4640,6 +4891,33 @@ function handleAiDriverTransfers(currentLineups, seasonPoints, playerChosenTeamN
     });
     console.log("--- End AI Driver Release Phase ---");
 
+    // --- 残留AIドライバーの契約金処理 ---
+    console.log("--- Processing Salaries for Retained AI Drivers ---");
+    for (const teamName in workingLineups) {
+        const team = workingLineups[teamName];
+        const affordableDrivers = []; // このチームが契約金を支払えるドライバーのリスト
+
+        for (const driver of team.drivers) {
+            if (driver.name === playerDriverShortName) {
+                affordableDrivers.push(driver); // プレイヤーは契約金0なので常に保持
+                continue;
+            }
+
+            const salary = driver.salary || calculateDriverSalary(driver.rating);
+            if (team.funds >= salary) {
+                team.funds -= salary; // 契約金を支払う
+                affordableDrivers.push(driver); // 支払い可能なのでリストに追加
+                console.log(`Retained AI: ${driver.name} (Team: ${teamName}). Salary $${salary.toLocaleString()} deducted. New funds: $${team.funds.toLocaleString()}`);
+            } else {
+                // チームが契約金を支払えない場合、ドライバーは放出される
+                console.warn(`Team ${teamName} cannot afford salary for (otherwise retained) AI: ${driver.name} (Salary $${salary.toLocaleString()}). Releasing driver. Current team funds: $${team.funds.toLocaleString()}`);
+                // affordableDrivers には追加しないことで、事実上チームから削除される
+            }
+        }
+        team.drivers = affordableDrivers; // チームのドライバーリストを更新
+    }
+    console.log("--- Finished Processing Salaries for Retained AI Drivers ---");
+
     // 2. 補充候補ドライバーの準備 (未所属F1 AI + F2/リザーブ)
     // Helper function to check if a driver is in any team in the provided lineups
     const isDriverInTeamLineups = (driverName, lineups) => {
@@ -4682,73 +4960,56 @@ function handleAiDriverTransfers(currentLineups, seasonPoints, playerChosenTeamN
         console.log(`Team ${teamName} (Tier ${teamInfoFromWorking.tier}) has ${currentDriverNamesInTeam.length} drivers (${currentDriverNamesInTeam.join(', ')}), needs to fill ${slotsToFillInThisTeam} slot(s).`);
 
         for (let i = 0; i < slotsToFillInThisTeam && replacementCandidates.length > 0; i++) {
-            let chosenCandidate = null;
-            let chosenCandidateIndex = -1;
+            let hiredForThisSlot = false;
+            for (let candIdx = 0; candIdx < replacementCandidates.length; candIdx++) {
+                const potentialCandidate = replacementCandidates[candIdx];
+                let isTierMatch = false;
 
-            // 1. チームのティアに合うF2/リザーブ候補者を探す (レート上位1-5名からランダム選択)
-            let tierMatchingF2Candidates = replacementCandidates.filter(candidate =>
-                candidate.isReserveOrF2 &&
-                teamInfoFromWorking.tier >= candidate.desiredTierMin &&
-                teamInfoFromWorking.tier <= candidate.desiredTierMax
-            );
-
-            if (tierMatchingF2Candidates.length > 0) {
-                const topNCount = Math.min(5, tierMatchingF2Candidates.length);
-                const selectionPool = tierMatchingF2Candidates.slice(0, topNCount);
-                const randomIndexInPool = Math.floor(Math.random() * selectionPool.length);
-                chosenCandidate = selectionPool[randomIndexInPool];
-                // chosenCandidate が replacementCandidates の中で何番目かを探す
-                chosenCandidateIndex = replacementCandidates.findIndex(rc => rc.name === chosenCandidate.name);
-                console.log(` > Team ${teamName} (Tier ${teamInfoFromWorking.tier}) considering F2/Reserve pool (Top ${topNCount} matching tier): ${selectionPool.map(c => `${c.name}[R${c.rating}]`).join(', ')}. Randomly selected: ${chosenCandidate.name}`);
-            }
-
-            // ティアに合うF2/リザーブが見つからなかった場合、
-            // 放出されたF1 AIを次に検討する
-            if (!chosenCandidate) { // ステップ1で候補が見つからなかった場合
-                for (let j = 0; j < replacementCandidates.length; j++) {
-                    const candidate = replacementCandidates[j];
-                    if (!candidate.isReserveOrF2) { // 放出されたF1 AI
-                        chosenCandidate = candidate;
-                        chosenCandidateIndex = j;
-                        console.log(` > Team ${teamName} (Tier ${teamInfoFromWorking.tier}) no suitable F2/Reserve found by new rule. Picking released F1 AI: ${chosenCandidate.name}`);
-                        break;
-                    }
+                if (potentialCandidate.isReserveOrF2) {
+                    // 希望ティア範囲を撤廃し、常にティアが一致するとみなす
+                    isTierMatch = true;
+                } else { // Released F1 AI
+                    isTierMatch = true; // Assume they are open to any tier or prioritize based on rating
                 }
-                // それでも見つからなければ、ティア条件を無視してF2/リザーブから選ぶ
-                if(!chosenCandidate && replacementCandidates.length > 0){
-                    chosenCandidate = replacementCandidates[0]; // ソート済みなので先頭がレーティング最上位
-                    // replacementCandidates[0] がF2/Reserveか確認する方がより丁寧
-                    // ただし、このフォールバックは「とにかく誰か」なので、先頭で問題ない可能性も
-                    if (replacementCandidates[0].isReserveOrF2) {
-                        console.log(` > Team ${teamName} (Tier ${teamInfoFromWorking.tier}) no F1 AI found. Picking top-rated F2/Reserve (ignoring tier): ${chosenCandidate.name}`);
+
+                if (!isTierMatch) {
+                    // console.log(` > Candidate ${potentialCandidate.name} (Tier Pref: ${potentialCandidate.desiredTierMin}-${potentialCandidate.desiredTierMax}) not a tier match for Team ${teamName} (Tier ${teamInfoFromWorking.tier}). Skipping.`);
+                    continue;
+                }
+
+                const candidateSalary = potentialCandidate.salary || calculateDriverSalary(potentialCandidate.rating);
+
+                if (teamInfoFromWorking.funds >= candidateSalary) {
+                    const fundsAfterSigning = teamInfoFromWorking.funds - candidateSalary;
+                    const minimumFundsToRetain = 100000; // 最低でも残す資金
+
+                    if (fundsAfterSigning >= minimumFundsToRetain) {
+                        console.log(` > Assigning ${potentialCandidate.name} (R:${potentialCandidate.rating}, Sal:${candidateSalary}, ${potentialCandidate.isReserveOrF2 ? 'F2/Res' : 'F1-Unassigned'}) to team ${teamName}. Funds: ${teamInfoFromWorking.funds.toLocaleString()} -> ${fundsAfterSigning.toLocaleString()}`);
+                        teamInfoFromWorking.funds = fundsAfterSigning;
+                        teamInfoFromWorking.drivers.push({
+                            name: potentialCandidate.name,
+                            fullName: potentialCandidate.fullName,
+                            rating: potentialCandidate.rating,
+                            aggression: potentialCandidate.aggression,
+                            age: potentialCandidate.age,
+                            salary: candidateSalary
+                        });
+                        replacementCandidates.splice(candIdx, 1); // Remove from candidates list
+                        hiredForThisSlot = true;
+                        break; // Exit candidate search loop, slot filled
                     } else {
-                        // replacementCandidates[0] がF1 AIだった場合 (上のループで見逃した場合など、通常は考えにくい)
-                        console.log(` > Team ${teamName} (Tier ${teamInfoFromWorking.tier}) as fallback, picking top-rated overall candidate: ${chosenCandidate.name}`);
+                        console.log(` > Team ${teamName} (Funds: ${teamInfoFromWorking.funds.toLocaleString()}) can afford ${potentialCandidate.name} (Sal: ${candidateSalary.toLocaleString()}), but signing would leave less than $${minimumFundsToRetain.toLocaleString()} (Remaining: ${fundsAfterSigning.toLocaleString()}). Skipping.`);
                     }
-                    chosenCandidateIndex = 0;
+                } else {
+                    console.log(` > Team ${teamName} cannot afford ${potentialCandidate.name} (Sal: ${candidateSalary}, Funds: ${teamInfoFromWorking.funds}). Skipping.`);
                 }
-            }
-            // 絶対的な最終フォールバック: それでも候補がいなければ、replacementCandidates の先頭を選ぶ (元のロジックの名残)
-            if (!chosenCandidate && replacementCandidates.length > 0) {
-                chosenCandidate = replacementCandidates[0];
-                chosenCandidateIndex = 0;
-                console.log(` > Team ${teamName} (Tier ${teamInfoFromWorking.tier}) as an absolute final fallback, picking top overall candidate from remaining: ${chosenCandidate.name}`);
-            }
+            } // End of replacementCandidates loop
 
-            if (chosenCandidate) {
-                console.log(` > Assigning ${chosenCandidate.name} (R:${chosenCandidate.rating}, ${chosenCandidate.isReserveOrF2 ? 'F2/Res' : 'F1-Unassigned'}) to team ${teamName}.`);
-                // Add to workingLineups
-                teamInfoFromWorking.drivers.push({
-                    name: chosenCandidate.name,
-                    fullName: chosenCandidate.fullName,
-                    rating: chosenCandidate.rating,
-                    aggression: chosenCandidate.aggression,
-                    age: chosenCandidate.age
-                });
-                replacementCandidates.splice(chosenCandidateIndex, 1); // 候補リストから削除
+            if (!hiredForThisSlot) {
+                console.log(` > No affordable candidate found for team ${teamName} for slot ${i + 1}.`);
+                // break; // Stop trying to fill slots for this team if no one affordable is left
             } else {
-                console.log(` > No suitable candidate found for team ${teamName} for slot ${i+1}.`);
-                break; // このチームの残りのスロットは埋められない
+                // Slot was filled, continue to the next slot if needed
             }
         }
     });
@@ -4773,7 +5034,8 @@ function handleAiDriverTransfers(currentLineups, seasonPoints, playerChosenTeamN
             }
             playerTeam.drivers.push({
                 name: playerDriverInfo.name, fullName: playerDriverInfo.fullName,
-                rating: playerDriverInfo.rating, aggression: playerDriverInfo.aggression, age: playerDriverInfo.age
+                rating: playerDriverInfo.rating, aggression: playerDriverInfo.aggression, age: playerDriverInfo.age,
+                salary: playerDriverInfo.salary || calculateDriverSalary(playerDriverInfo.rating) // Ensure player salary
             });
         }
         // Ensure player's team has at most 1 AI
@@ -4817,11 +5079,25 @@ function handleAiDriverTransfers(currentLineups, seasonPoints, playerChosenTeamN
         for (let i = 0; i < requiredSlots && stillUnassignedAIs.length > 0; i++) {
             const fillerAi = stillUnassignedAIs.shift(); // 配列の先頭から取得して削除
             if (!team.drivers.some(d => d.name === fillerAi.name)) { // 重複追加を防ぐ
-                team.drivers.push({
-                    name: fillerAi.name, fullName: fillerAi.fullName,
-                    rating: fillerAi.rating, aggression: fillerAi.aggression, age: fillerAi.age
-                });
-                console.log(`Assigned still unassigned AI ${fillerAi.name} (R:${fillerAi.rating}) to team ${teamName} to fill slot.`);
+                const fillerSalary = fillerAi.salary || calculateDriverSalary(fillerAi.rating);
+                const fundsAfterSigningFiller = team.funds - fillerSalary;
+                const minimumFundsToRetainFiller = 100000; // 最低でも残す資金
+
+                if (team.funds >= fillerSalary && fundsAfterSigningFiller >= minimumFundsToRetainFiller) {
+                    team.funds = fundsAfterSigningFiller;
+                    team.drivers.push({
+                        name: fillerAi.name, fullName: fillerAi.fullName,
+                        rating: fillerAi.rating, aggression: fillerAi.aggression, age: fillerAi.age,
+                        salary: fillerSalary
+                    });
+                    console.log(`Assigned still unassigned AI ${fillerAi.name} (R:${fillerAi.rating}, Sal:${fillerSalary.toLocaleString()}) to team ${teamName}. New funds: $${team.funds.toLocaleString()}`);
+                } else if (team.funds >= fillerSalary) {
+                    console.log(`Team ${teamName} (Funds: ${team.funds.toLocaleString()}) can afford unassigned AI ${fillerAi.name} (Sal: ${fillerSalary.toLocaleString()}), but signing would leave less than $${minimumFundsToRetainFiller.toLocaleString()} (Remaining: ${fundsAfterSigningFiller.toLocaleString()}). Skipping. Adding back to pool.`);
+                    stillUnassignedAIs.unshift(fillerAi);
+                } else {
+                    console.log(`Team ${teamName} cannot afford unassigned AI ${fillerAi.name} (Sal: ${fillerSalary.toLocaleString()}, Funds: ${team.funds.toLocaleString()}). Skipping for this slot. Adding ${fillerAi.name} back to unassigned pool.`);
+                    stillUnassignedAIs.unshift(fillerAi); // 雇えなかったのでリストの先頭に戻す (他のチームが試せるように)
+                }
             } else {
                 i--; // この候補は使えなかったので、次の候補のためにカウンタを戻す
             }
@@ -4829,7 +5105,30 @@ function handleAiDriverTransfers(currentLineups, seasonPoints, playerChosenTeamN
 
         // 最終チェック
         if (team.drivers.length < targetDriverCount) {
-            console.warn(`Team ${teamName} still has ${team.drivers.length} drivers after final adjustment (target ${targetDriverCount}). Drivers: ${team.drivers.map(d=>d.name).join(', ')}. Needs more robust filling if this occurs frequently.`);
+            console.warn(`Team ${teamName} still has ${team.drivers.length} drivers after final adjustment (target ${targetDriverCount}). Drivers: ${team.drivers.map(d=>d.name).join(', ')}. Attempting to fill with lowest rated for free.`);
+            // チームがまだドライバーを必要としている場合、利用可能な最もレートの低いドライバーを無償で雇う
+            let neededToFillDesperately = targetDriverCount - team.drivers.length;
+            if (neededToFillDesperately > 0 && stillUnassignedAIs.length > 0) {
+                // 最もレートの低いドライバーを見つけるために、stillUnassignedAIsをレート昇順でソート
+                stillUnassignedAIs.sort((a, b) => a.rating - b.rating);
+
+                for (let k = 0; k < neededToFillDesperately && stillUnassignedAIs.length > 0; k++) {
+                    const desperateHireAi = stillUnassignedAIs.shift(); // 最もレートの低いドライバーを取得
+                    if (desperateHireAi && !team.drivers.some(d => d.name === desperateHireAi.name)) {
+                        team.drivers.push({
+                            name: desperateHireAi.name, fullName: desperateHireAi.fullName,
+                            rating: desperateHireAi.rating, aggression: desperateHireAi.aggression, age: desperateHireAi.age,
+                            salary: 0 // 無償で雇用
+                        });
+                        console.log(`DESPERATE HIRE: Team ${teamName} hired ${desperateHireAi.name} (R:${desperateHireAi.rating}) for free to fill roster. Team funds: $${team.funds.toLocaleString()}`);
+                    } else if (desperateHireAi) {
+                        stillUnassignedAIs.unshift(desperateHireAi); // 既にチームにいるか、問題があれば元に戻す
+                        k--; // カウンターを戻す
+                    }
+                }
+                // 次のチームの処理のために、元のソート順(高レーティング優先)に戻す
+                stillUnassignedAIs.sort((a, b) => b.rating - a.rating);
+            }
         } else if (team.drivers.length > targetDriverCount) {
             console.error(`CRITICAL: Team ${teamName} has ${team.drivers.length} drivers! (target ${targetDriverCount}). Drivers: ${team.drivers.map(d=>d.name).join(', ')}. Logic error in assignment.`);
         }
@@ -4866,6 +5165,7 @@ function handleAiDriverTransfers(currentLineups, seasonPoints, playerChosenTeamN
                 rating: driverData.rating,
                 aggression: driverData.aggression,
                 age: driverData.age,
+                salary: driverData.salary || calculateDriverSalary(driverData.rating), // Ensure salary
                 desiredTierMin: wasF1DriverAtStartOfTransfer && originalDriverRecord.currentTeamTier ? Math.max(3, originalDriverRecord.currentTeamTier) : (originalDriverRecord.desiredTierMin || 3),
                 desiredTierMax: wasF1DriverAtStartOfTransfer && originalDriverRecord.currentTeamTier ? 5 : (originalDriverRecord.desiredTierMax || 5)
             });
@@ -4874,6 +5174,7 @@ function handleAiDriverTransfers(currentLineups, seasonPoints, playerChosenTeamN
             reserveAndF2Drivers[reserveDriverIndex].rating = driverData.rating;
             reserveAndF2Drivers[reserveDriverIndex].age = driverData.age;
             reserveAndF2Drivers[reserveDriverIndex].aggression = driverData.aggression;
+            reserveAndF2Drivers[reserveDriverIndex].salary = driverData.salary || calculateDriverSalary(driverData.rating); // Update salary
             console.log(` > ${driverData.name} already in reserves. Updated info (Rating, Age, Aggression).`);
         }
     });
@@ -4998,6 +5299,7 @@ function gatherSaveData(gameStateToStore) {
         playerCareerHistory: JSON.parse(JSON.stringify(playerCareerHistory)),
 
         driverLineups: JSON.parse(JSON.stringify(driverLineups)),
+        // reserveAndF2Drivers にも salary が追加されているので、そのままセーブされる
         reserveAndF2Drivers: JSON.parse(JSON.stringify(reserveAndF2Drivers)),
 
         ZOOM_LEVEL: ZOOM_LEVEL,
@@ -5057,6 +5359,7 @@ function applyLoadedData(dataToLoad) {
     playerCareerHistory = dataToLoad.playerCareerHistory ? JSON.parse(JSON.stringify(dataToLoad.playerCareerHistory)) : [];
 
     driverLineups = dataToLoad.driverLineups ? JSON.parse(JSON.stringify(dataToLoad.driverLineups)) : {}; // driverLineups のデフォルトは複雑なので、ロード失敗時は問題
+    // reserveAndF2Drivers にも salary が含まれている想定でロード
     reserveAndF2Drivers = dataToLoad.reserveAndF2Drivers ? JSON.parse(JSON.stringify(dataToLoad.reserveAndF2Drivers)) : [];
 
     ZOOM_LEVEL = dataToLoad.ZOOM_LEVEL || 1.0;
@@ -5083,6 +5386,10 @@ function applyLoadedData(dataToLoad) {
         // この画面から次の画面（例：ロスター）に進む際に initializeCars が呼ばれる。
         // chosenPlayerInfo は直接ロードされるので、プレイヤー名表示は大丈夫。
         // チームのパフォーマンス表示も driverLineups からなので大丈夫。
+        // ドライバーの契約金もロードされているはず。
+        if (!driverLineups[Object.keys(driverLineups)[0]]?.drivers[0]?.hasOwnProperty('salary')) {
+            initializeDriverSalaries(); // 古いセーブデータの場合、給与を初期化
+        }
         // ここで initializeCars() を呼ばなくても、次の画面遷移で初期化される想定。
     }
 
