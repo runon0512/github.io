@@ -95,69 +95,65 @@ const carImageSources = [
     'HAA_CAR.png'
 ];
 
-// === F1ドライバーラインナップ (2023年シーズン後半または2024年を想定) ===
+// === F1ドライバーラインナップ (2025年シーズンを想定) ===
 // 各チームに対応する単一の画像ファイル名 image を追加し、images 配列を削除
 let driverLineups = {
-    "Red Bull":     { drivers: [{name: "M.VER", fullName: "Max Verstappen", rating: 99, aggression: 0.9, age: 26, salary: 0}, {name: "S.PER", fullName: "Sergio Perez", rating: 88, aggression: 0.6, age: 34, salary: 0}], image: "RB_CAR.png", tier: 1, accelerationFactor: 1.05, maxSpeedFactor: 1.01, turnSpeedFactor: 1.02, funds: 1000000 },
-    "McLaren":      { drivers: [{name: "L.NOR", fullName: "Lando Norris", rating: 92, aggression: 0.7, age: 24, salary: 0}, {name: "O.PIA", fullName: "Oscar Piastri", rating: 89, aggression: 0.5, age: 23, salary: 0}], image: "MCL_CAR.png", tier: 1, accelerationFactor: 1.02, maxSpeedFactor: 1.02, turnSpeedFactor: 1.05, funds: 1000000 },
-    "Ferrari":      { drivers: [{name: "C.LEC", fullName: "Charles Leclerc", rating: 91, aggression: 0.65, age: 26, salary: 0}, {name: "C.SAI", fullName: "Carlos Sainz", rating: 90, aggression: 0.7, age: 29, salary: 0}], image: "FER_CAR.png", tier: 2, accelerationFactor: 1.00, maxSpeedFactor: 1.01, turnSpeedFactor: 1.00, funds: 1000000 },
-    "Mercedes":     { drivers: [{name: "L.HAM", fullName: "Lewis Hamilton", rating: 93, aggression: 0.75, age: 39, salary: 0}, {name: "G.RUS", fullName: "George Russell", rating: 89, aggression: 0.6, age: 26, salary: 0}], image: "MER_CAR.png", tier: 2, accelerationFactor: 1.01, maxSpeedFactor: 1.005, turnSpeedFactor: 1.01, funds: 1000000 },
-    "Aston Martin": { drivers: [{name: "F.ALO", fullName: "Fernando Alonso", rating: 90, aggression: 0.85, age: 42, salary: 0}, {name: "L.STR", fullName: "Lance Stroll", rating: 78, aggression: 0.4, age: 25, salary: 0}], image: "AM_CAR.png", tier: 3, accelerationFactor: 0.98, maxSpeedFactor: 0.99, turnSpeedFactor: 0.98, funds: 1000000 },
-    "Alpine":       { drivers: [{name: "E.OCO", fullName: "Esteban Ocon", rating: 85, aggression: 0.6, age: 27, salary: 0}, {name: "P.GAS", fullName: "Pierre Gasly", rating: 86, aggression: 0.55, age: 28, salary: 0}], image: "ALP_CAR.png", tier: 3, accelerationFactor: 0.97, maxSpeedFactor: 0.98, turnSpeedFactor: 0.99, funds: 1000000 },
-    "Williams":     { drivers: [{name: "A.ALB", fullName: "Alexander Albon", rating: 87, aggression: 0.45, age: 28, salary: 0}, {name: "L.SAR", fullName: "Logan Sargeant", rating: 72, aggression: 0.75, age: 23, salary: 0}], image: "WIL_CAR.png", tier: 4, accelerationFactor: 0.87, maxSpeedFactor: 1.00, turnSpeedFactor: 0.95, funds: 1000000 },
-    "VCARB":        { drivers: [{name: "Y.TSU", fullName: "Yuki Tsunoda", rating: 83, aggression: 0.7, age: 24, salary: 0}, {name: "L.LAW", fullName: "Liam Lawson", rating: 76, aggression: 0.95, age: 22, salary: 0}], image: "VC_CAR.png", tier: 4, accelerationFactor: 0.96, maxSpeedFactor: 0.975, turnSpeedFactor: 0.97, funds: 1000000 },
-    "Kick Sauber":  { drivers: [{name: "V.BOT", fullName: "Valtteri Bottas", rating: 82, aggression: 0.4, age: 34, salary: 0}, {name: "G.ZHO", fullName: "Guanyu Zhou", rating: 79, aggression: 0.35, age: 25, salary: 0}], image: "SAU_CAR.png", tier: 5, accelerationFactor: 0.92, maxSpeedFactor: 0.95, turnSpeedFactor: 0.96, funds: 1000000 },
-    "Haas":         { drivers: [{name: "K.MAG", fullName: "Kevin Magnussen", rating: 80, aggression: 0.8, age: 31, salary: 0}, {name: "N.HUL", fullName: "Nico Hulkenberg", rating: 81, aggression: 0.5, age: 36, salary: 0}], image: "HAA_CAR.png", tier: 5, accelerationFactor: 0.93, maxSpeedFactor: 0.95, turnSpeedFactor: 0.94, funds: 1000000 }
+    "Red Bull":     { drivers: [{name: "VER", fullName: "Max Verstappen", rating: 99, aggression: 0.9, age: 27, salary: 0}, {name: "TSU", fullName: "Yuki Tsunoda", rating: 86, aggression: 0.7, age: 25, salary: 0}], image: "RB_CAR.png", tier: 1, accelerationFactor: 1.06, maxSpeedFactor: 1.02, turnSpeedFactor: 1.03, funds: 1000000 },
+    "McLaren":      { drivers: [{name: "NOR", fullName: "Lando Norris", rating: 93, aggression: 0.7, age: 25, salary: 0}, {name: "PIA", fullName: "Oscar Piastri", rating: 90, aggression: 0.5, age: 24, salary: 0}], image: "MCL_CAR.png", tier: 1, accelerationFactor: 1.03, maxSpeedFactor: 1.025, turnSpeedFactor: 1.05, funds: 1000000 },
+    "Ferrari":      { drivers: [{name: "LEC", fullName: "Charles Leclerc", rating: 92, aggression: 0.65, age: 27, salary: 0}, {name: "HAM", fullName: "Lewis Hamilton", rating: 94, aggression: 0.75, age: 40, salary: 0}], image: "FER_CAR.png", tier: 1, accelerationFactor: 1.04, maxSpeedFactor: 1.015, turnSpeedFactor: 1.02, funds: 1000000 },
+    "Mercedes":     { drivers: [{name: "RUS", fullName: "George Russell", rating: 90, aggression: 0.6, age: 27, salary: 0}, {name: "ANT", fullName: "Andrea Kimi Antonelli", rating: 80, aggression: 0.75, age: 18, salary: 0}], image: "MER_CAR.png", tier: 2, accelerationFactor: 1.00, maxSpeedFactor: 1.00, turnSpeedFactor: 1.00, funds: 1000000 },
+    "Aston Martin": { drivers: [{name: "ALO", fullName: "Fernando Alonso", rating: 90, aggression: 0.85, age: 43, salary: 0}, {name: "STR", fullName: "Lance Stroll", rating: 78, aggression: 0.4, age: 26, salary: 0}], image: "AM_CAR.png", tier: 2, accelerationFactor: 0.99, maxSpeedFactor: 0.995, turnSpeedFactor: 0.99, funds: 1000000 },
+    "Williams":     { drivers: [{name: "ALB", fullName: "Alexander Albon", rating: 88, aggression: 0.45, age: 29, salary: 0}, {name: "SAI", fullName: "Carlos Sainz", rating: 91, aggression: 0.7, age: 30, salary: 0}], image: "WIL_CAR.png", tier: 3, accelerationFactor: 0.95, maxSpeedFactor: 1.00, turnSpeedFactor: 0.97, funds: 1000000 },
+    "Alpine":       { drivers: [{name: "GAS", fullName: "Pierre Gasly", rating: 85, aggression: 0.55, age: 29, salary: 0}, {name: "DOO", fullName: "Jack Doohan", rating: 77, aggression: 0.65, age: 22, salary: 0}], image: "ALP_CAR.png", tier: 3, accelerationFactor: 0.96, maxSpeedFactor: 0.97, turnSpeedFactor: 0.98, funds: 1000000 },
+    "VCARB":        { drivers: [{name: "LAW", fullName: "Liam Lawson", rating: 78, aggression: 0.95, age: 23, salary: 0}, {name: "HAD", fullName: "Isack Hadjar", rating: 78, aggression: 0.7, age: 20, salary: 0}], image: "VC_CAR.png", tier: 4, accelerationFactor: 0.94, maxSpeedFactor: 0.965, turnSpeedFactor: 0.96, funds: 1000000 },
+    "Kick Sauber":  { drivers: [{name: "HUL", fullName: "Nico Hulkenberg", rating: 82, aggression: 0.5, age: 37, salary: 0}, {name: "BOR", fullName: "Gabriel Bortoleto", rating: 77, aggression: 0.65, age: 20, salary: 0}], image: "SAU_CAR.png", tier: 4, accelerationFactor: 0.91, maxSpeedFactor: 0.94, turnSpeedFactor: 0.95, funds: 1000000 },
+    "Haas":         { drivers: [{name: "BEA", fullName: "Oliver Bearman", rating: 79, aggression: 0.7, age: 20, salary: 0}, {name: "OCO", fullName: "Esteban Ocon", rating: 84, aggression: 0.6, age: 28, salary: 0}], image: "HAA_CAR.png", tier: 5, accelerationFactor: 0.90, maxSpeedFactor: 0.93, turnSpeedFactor: 0.93, funds: 1000000 }
 };
 
-// === F2/リザーブドライバープール ===
+// === F2/リザーブドライバープール (2025年想定) ===
 // type: "F2", "Reserve"
 // desiredTierMin/Max: F1昇格時の希望チームティア (1が最高)
 // imageName: チーム画像を使用するため不要に
 let reserveAndF2Drivers = [
-    { name: "T.POU", fullName: "Theo Pourchaire", rating: 78, aggression: 0.6, age: 20, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
-    { name: "F.DRU", fullName: "Felipe Drugovich", rating: 77, aggression: 0.5, age: 23, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "O.BEA", fullName: "Oliver Bearman", rating: 79, aggression: 0.7, age: 19, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
-    { name: "J.DOO", fullName: "Jack Doohan", rating: 76, aggression: 0.65, age: 21, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "V.MAR", fullName: "Victor Martins", rating: 75, aggression: 0.55, age: 22, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "A.IWA", fullName: "Ayumu Iwasa", rating: 74, aggression: 0.8, age: 22, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "F.VES", fullName: "Frederik Vesti", rating: 77, aggression: 0.6, age: 22, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
-    { name: "D.HAU", fullName: "Dennis Hauger", rating: 73, aggression: 0.7, age: 21, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "Z.MAL", fullName: "Zane Maloney", rating: 72, aggression: 0.5, age: 20, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "E.FIT", fullName: "Enzo Fittipaldi", rating: 71, aggression: 0.75, age: 22, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
-    { name: "R.VCH", fullName: "Richard Verschoor", rating: 70, aggression: 0.4, age: 23, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
-    { name: "K.MAI", fullName: "Kush Maini", rating: 70, aggression: 0.6, age: 23, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "J.CRA", fullName: "Jak Crawford", rating: 69, aggression: 0.5, age: 19, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "I.HAD", fullName: "Isack Hadjar", rating: 72, aggression: 0.7, age: 19, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
-    { name: "G.BOR", fullName: "Gabriel Bortoleto", rating: 74, aggression: 0.65, age: 19, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
-    { name: "A.ANT", fullName: "Andrea Kimi Antonelli", rating: 80, aggression: 0.75, age: 17, desiredTierMin: 2, desiredTierMax: 4, salary: 0 }, // High potential
-    { name: "P.ARO", fullName: "Paul Aron", rating: 68, aggression: 0.55, age: 20, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "F.COL", fullName: "Franco Colapinto", rating: 74, aggression: 0.8, age: 20, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
-    { name: "P.MAR", fullName: "Pepe Martí", rating: 66, aggression: 0.6, age: 18, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
-    { name: "T.BAR", fullName: "Taylor Barnard", rating: 65, aggression: 0.45, age: 19, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
-    { name: "A.NOB", fullName: "Aurelia Nobels", rating: 59, aggression: 0.65, age: 17, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
-    { name: "N.LAT", fullName: "Nicholas Latifi", rating: 70, aggression: 0.5, age: 28, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
-    { name: "N.MAZ", fullName: "Nikita Mazepin", rating: 68, aggression: 0.98, age: 25, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
-    { name: "M.SCH", fullName: "Mick Schumacher", rating: 77, aggression: 0.5, age: 25, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
-    { name: "N.DEV", fullName: "Nyck de Vries", rating: 75, aggression: 0.6, age: 29, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "A.GIO", fullName: "Antonio Giovinazzi", rating: 76, aggression: 0.55, age: 30, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "R.SHW", fullName: "Robert Shwartzman", rating: 74, aggression: 0.6, age: 24, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "J.DAR", fullName: "Jehan Daruvala", rating: 72, aggression: 0.5, age: 25, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "M.ARM", fullName: "Marcus Armstrong", rating: 71, aggression: 0.65, age: 23, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "C.NOV", fullName: "Clement Novalak", rating: 69, aggression: 0.7, age: 23, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
-    { name: "R.BOS", fullName: "Ralph Boschung", rating: 68, aggression: 0.4, age: 26, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
-    { name: "R.NIS", fullName: "Roy Nissany", rating: 65, aggression: 0.75, age: 29, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
-    { name: "E.TRU", fullName: "Enzo Trulli", rating: 63, aggression: 0.6, age: 19, desiredTierMin: 5, desiredTierMax: 5, salary: 0 }
+    { name: "PER", fullName: "Sergio Perez", rating: 87, aggression: 0.6, age: 35, desiredTierMin: 2, desiredTierMax: 4, salary: 0 }, // Ex-F1 (Red Bullから移動)
+    { name: "BOT", fullName: "Valtteri Bottas", rating: 80, aggression: 0.4, age: 35, desiredTierMin: 3, desiredTierMax: 5, salary: 0 }, // Ex-F1
+    { name: "ZHO", fullName: "Guanyu Zhou", rating: 78, aggression: 0.35, age: 26, desiredTierMin: 4, desiredTierMax: 5, salary: 0 }, // Ex-F1
+    { name: "MAG", fullName: "Kevin Magnussen", rating: 79, aggression: 0.8, age: 32, desiredTierMin: 4, desiredTierMax: 5, salary: 0 }, // Ex-F1
+    { name: "POU", fullName: "Theo Pourchaire", rating: 78, aggression: 0.6, age: 21, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
+    { name: "DRU", fullName: "Felipe Drugovich", rating: 77, aggression: 0.5, age: 24, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "VMA", fullName: "Victor Martins", rating: 76, aggression: 0.55, age: 23, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "IWA", fullName: "Ayumu Iwasa", rating: 75, aggression: 0.8, age: 23, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "VES", fullName: "Frederik Vesti", rating: 77, aggression: 0.6, age: 23, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
+    { name: "HAU", fullName: "Dennis Hauger", rating: 74, aggression: 0.7, age: 22, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "MAL", fullName: "Zane Maloney", rating: 73, aggression: 0.5, age: 21, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "FIT", fullName: "Enzo Fittipaldi", rating: 72, aggression: 0.75, age: 23, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "VCH", fullName: "Richard Verschoor", rating: 70, aggression: 0.4, age: 24, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "MAI", fullName: "Kush Maini", rating: 71, aggression: 0.6, age: 24, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "CRA", fullName: "Jak Crawford", rating: 70, aggression: 0.5, age: 20, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    // { name: "I.HAD", fullName: "Isack Hadjar", rating: 73, aggression: 0.7, age: 20, desiredTierMin: 3, desiredTierMax: 5, salary: 0 }, // VCARBへ移動
+    { name: "ARO", fullName: "Paul Aron", rating: 69, aggression: 0.55, age: 21, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "COL", fullName: "Franco Colapinto", rating: 75, aggression: 0.8, age: 21, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "PMA", fullName: "Pepe Martí", rating: 67, aggression: 0.6, age: 19, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "SAR", fullName: "Logan Sargeant", rating: 70, aggression: 0.75, age: 24, desiredTierMin: 5, desiredTierMax: 5, salary: 0 }, // Ex-F1
+    { name: "MSC", fullName: "Mick Schumacher", rating: 77, aggression: 0.5, age: 26, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
+    { name: "DEV", fullName: "Nyck de Vries", rating: 75, aggression: 0.6, age: 30, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "ALC", fullName: "Arthur Leclerc", rating: 74, aggression: 0.65, age: 24, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "BRO", fullName: "Luke Browning", rating: 76, aggression: 0.7, age: 23, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "OSU", fullName: "Zak O'Sullivan", rating: 72, aggression: 0.6, age: 20, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "NOB", fullName: "Aurelia Nobels", rating: 62, aggression: 0.65, age: 18, desiredTierMin: 5, desiredTierMax: 5, salary: 0 }, // 既存
+    { name: "PIN", fullName: "Doriane Pin", rating: 65, aggression: 0.65, age: 21, desiredTierMin: 4, desiredTierMax: 5, salary: 0 }, // 既存
+    // === 追加ドライバー (10名) ===
+    { name: "JUJ", fullName: "Juju Noda", rating: 51, aggression: 0.7, age: 19, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "LIN", fullName: "Arvid Lindblad", rating: 73, aggression: 0.6, age: 18, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
+    { name: "MIN", fullName: "Gabriele Minì", rating: 74, aggression: 0.55, age: 20, desiredTierMin: 3, desiredTierMax: 5, salary: 0 },
+    { name: "BEG", fullName: "Dino Beganovic", rating: 72, aggression: 0.6, age: 21, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "GOE", fullName: "Oliver Goethe", rating: 70, aggression: 0.5, age: 20, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "TSO", fullName: "Nikola Tsolov", rating: 69, aggression: 0.75, age: 18, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "FLO", fullName: "Sophia Flörsch", rating: 67, aggression: 0.5, age: 24, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
+    { name: "MAN", fullName: "Christian Mansell", rating: 71, aggression: 0.6, age: 20, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
+    { name: "SZT", fullName: "Kacper Sztuka", rating: 70, aggression: 0.65, age: 19, desiredTierMin: 4, desiredTierMax: 5, salary: 0 }
 ];
-// 追加のF2/リザーブドライバー
-reserveAndF2Drivers.push(
-    { name: "M.WEG", fullName: "Maya Weug", rating: 62, aggression: 0.6, age: 19, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
-    { name: "N.JUJ", fullName: "Juju Noda", rating: 50, aggression: 0.98, age: 18, desiredTierMin: 5, desiredTierMax: 5, salary: 0 },
-    { name: "D.PIN", fullName: "Doriane Pin", rating: 63, aggression: 0.65, age: 20, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "A.LEC", fullName: "Arthur Leclerc", rating: 73, aggression: 0.65, age: 23, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "L.BRO", fullName: "Luke Browning", rating: 75, aggression: 0.7, age: 22, desiredTierMin: 4, desiredTierMax: 5, salary: 0 },
-    { name: "Z.OSU", fullName: "Zak O'Sullivan", rating: 71, aggression: 0.6, age: 19, desiredTierMin: 4, desiredTierMax: 5, salary: 0 }
-);
+// 追加のF2/リザーブドライバーは上記に統合または削除
 
 // carImageSources に含まれるべき正しいファイル名リスト (driverLineups と同期確認用)
 const expectedImageFilesFromLineups = [];
@@ -261,6 +257,26 @@ const careerNextButton = {
     isVisible: false,
     isClicked: function(mouseX, mouseY) {
         return this.isVisible && gameState === 'all_finished' && careerPlayerTeamName && // 表示条件を追加
+               mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
+    }
+};
+
+// === キャリアモード リプレイ終了後「結果に戻る」ボタン ===
+const careerReplayBackButton = {
+    x: 0, y: 0, width: 200, height: 50, text: "結果に戻る",
+    isVisible: false,
+    isClicked: function(mouseX, mouseY) {
+        return this.isVisible && gameState === 'replay' && isReplayPaused && careerPlayerTeamName &&
+               mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
+    }
+};
+
+// === キャリアモード リプレイ終了後「もう一度リプレイを見る」ボタン ===
+const careerReplayAgainButton = {
+    x: 0, y: 0, width: 250, height: 50, text: "もう一度リプレイを見る",
+    isVisible: false,
+    isClicked: function(mouseX, mouseY) {
+        return this.isVisible && gameState === 'replay' && isReplayPaused && careerPlayerTeamName &&
                mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
     }
 };
@@ -1810,34 +1826,57 @@ canvas.addEventListener('click', (event) => {
         replaySpeedMultiplier = 1.0;
         lastReplayUpdateTime = Date.now();
         replayButton.isVisible = false; // Hide after clicking to start/restart replay
+        careerReplayBackButton.isVisible = false; // Ensure this is also hidden
+        careerReplayAgainButton.isVisible = false; // And this one too
         console.log("Replay (re)started via Button");
         return; // Click handled
     }
 
     // If not a replay button click, then handle other clicks based on gameState
     if (gameState === 'replay') {
-        // リプレイUIのドライバー選択リストのクリック判定
+        // まず「結果に戻る」ボタンの判定 (キャリアモードリプレイ終了時)
+        if (careerReplayBackButton.isClicked(mousePos.x, mousePos.y)) {
+            gameState = 'all_finished';
+            careerReplayBackButton.isVisible = false;
+            careerReplayAgainButton.isVisible = false;
+            replayButton.isVisible = true; // 再度リプレイを見られるように
+            if (careerPlayerTeamName) {
+                careerNextButton.isVisible = true; // キャリアならNEXTボタンも表示
+            }
+            console.log("Returned to race results from replay.");
+            return; // Click handled
+        }
+        // 次に「もう一度リプレイを見る」ボタンの判定 (キャリアモードリプレイ終了時)
+        if (careerReplayAgainButton.isClicked(mousePos.x, mousePos.y)) {
+            // Restart replay
+            gameState = 'replay';
+            replayFrameIndex = 0;
+            selectedReplayCarIndex = playerCarIndex; // Default to player
+            isReplayPaused = false;
+            replaySpeedMultiplier = 1.0;
+            lastReplayUpdateTime = Date.now();
+            careerReplayBackButton.isVisible = false;
+            careerReplayAgainButton.isVisible = false;
+            replayButton.isVisible = false; // Main replay button should also be hidden
+            console.log("Replay restarted (career mode, from replay screen).");
+            return; // Click handled
+        }
+
+        // リプレイUIのドライバー選択リストのクリック判定 (「結果に戻る」が押されなかった場合)
         const replayUiDriverListYStart = 50;
         const replayUiDriverListLineHeight = 20;
         const replayUiDriverListXStart = 10;
         const replayUiDriverListWidth = 200; // クリック判定の幅
-        // 描画時と同じように、現在のリプレイフレームの状態でソートされたリストを作成
-        const sortedCarsForClickHandling = cars
-            .map((car, index) => ({
-                ...car, // carオブジェクトの全プロパティをコピー
-                originalIndex: index // 元のインデックスを保持
-            }))
-            .sort((a, b) => a.y - b.y); // Y座標で昇順ソート
+        const sortedCarsForClickHandling = cars.map((car, index) => ({ ...car, originalIndex: index })).sort((a, b) => a.y - b.y);
 
         sortedCarsForClickHandling.forEach((carData, sortedIndex) => {
             const driverNameY = replayUiDriverListYStart + sortedIndex * replayUiDriverListLineHeight;
             if (mousePos.x >= replayUiDriverListXStart && mousePos.x <= replayUiDriverListXStart + replayUiDriverListWidth &&
                 mousePos.y >= driverNameY - replayUiDriverListLineHeight / 2 && mousePos.y <= driverNameY + replayUiDriverListLineHeight / 2) {
-                selectedReplayCarIndex = carData.originalIndex; // ソート前の元のインデックスを設定
-                // lastReplayUpdateTime = Date.now(); // 追尾対象変更時にリプレイ時間をリセットしたくない場合は不要
+                selectedReplayCarIndex = carData.originalIndex;
             }
         });
-        // ここに他のリプレイ中のUI要素（再生/一時停止ボタンなど）のクリック判定を追加できる
+        // 他のリプレイ中UI要素のクリック判定はここに追加
     } else if (gameState !== 'all_finished') { // 'all_finished' 以外の状態で、まだリプレイボタンが押されていない場合
         // No specific actions needed here for now, but this structure allows future expansion.
     }
@@ -2712,7 +2751,7 @@ function update() {
 
     // レース履歴の記録: gameStateが 'race' または 'finished' の間は記録を続ける
     // 記録停止は gameState が 'all_finished' に遷移することで制御される
-    if ((gameState === 'race' || gameState === 'finished') && !careerPlayerTeamName) { // キャリアモードでは記録しない
+    if (gameState === 'race' || gameState === 'finished') { // キャリアモードでも記録するように変更
         const currentCarStates = cars.map(car => ({
             x: car.x, y: car.y, angle: car.angle, speed: car.speed,
             hasFinished: car.hasFinished, finalRank: car.finalRank // ゴール情報も記録
@@ -2805,8 +2844,8 @@ function update() {
                 // ボタンのX位置をキャリアとクイックレースで共通化
                 const commonButtonX = canvas.width / 2 - replayButton.width / 2; // replayButtonの幅を基準に中央揃え
                 replayButton.x = commonButtonX;
-                replayButton.y = canvas.height - replayButton.height - 30;                
-                replayButton.isVisible = !careerPlayerTeamName; // キャリアモードではリプレイボタンを表示しない
+                replayButton.y = canvas.height - replayButton.height - 30;
+                replayButton.isVisible = true; // キャリアモードでもリプレイボタンを表示する
                 if (careerPlayerTeamName) {
                     careerNextButton.isVisible = true; // キャリアならNEXTボタンも表示
                 } else {
@@ -2967,15 +3006,21 @@ function handleReplayUpdate() {
         if (replayFrameIndex >= raceHistory.length - 1) {
             replayFrameIndex = raceHistory.length - 1; // 最終フレームに留まる
             isReplayPaused = true; // 最後まで行ったら一時停止
-            replayButton.isVisible = true; // リプレイボタンを再表示
-
+            if (careerPlayerTeamName) {
+                careerReplayBackButton.isVisible = true; // キャリアモードなら「結果に戻る」ボタンを表示
+                careerReplayAgainButton.isVisible = true; // 「もう一度リプレイを見る」ボタンも表示
+                // replayButton.isVisible should remain false here
+            } else {
+                replayButton.isVisible = true; // クイックレースなら通常のリプレイボタンを再表示
+                careerReplayBackButton.isVisible = false; // Ensure hidden
+                careerReplayAgainButton.isVisible = false; // Ensure hidden
+            }
             // ボタンの位置が未設定の場合（通常は 'all_finished' で設定されるが念のため）
-            if (replayButton.x === 0 && replayButton.y === 0) {
+            if (replayButton.x === 0 && replayButton.y === 0 && !careerPlayerTeamName) { // Non-career
                  replayButton.x = canvas.width / 2 - replayButton.width / 2;
                  replayButton.y = canvas.height - replayButton.height - 30;
             }
-            console.log("Replay ended. Click 'Replay' button to watch again.");
-
+            console.log("Replay ended.");
         } else if (replayFrameIndex < 0) {
             replayFrameIndex = 0;
         }
@@ -3343,7 +3388,7 @@ function draw() {
                 }
                 ctx.textAlign = 'center';
                 // マシンの上中央に名前を表示 (Y座標を調整して画像の上に配置)
-                ctx.fillText(car.driverName, 0, -CAR_HEIGHT / 2 - 5); // X=0 (中心), Yはマシンの高さ半分より少し上
+                ctx.fillText(car.driverName, 0, -CAR_HEIGHT / 2 - 5); // car.driverName は3文字表記になっている想定
             }
             ctx.restore();
         } else {
@@ -3468,6 +3513,13 @@ function draw() {
             // let rankChangeIndicator = ""; // 順位変動表示は削除
 
             let intervalText = "";
+            let displayNameInRanking = rankData.driverName; // デフォルトは既存のdriverName
+            // fullName からラストネームを抽出して大文字に
+            const carObject = cars.find(c => c.driverName === rankData.driverName);
+            if (carObject && carObject.fullName) {
+                const nameParts = carObject.fullName.split(' ');
+                displayNameInRanking = nameParts.length > 1 ? nameParts[nameParts.length - 1].toUpperCase() : carObject.fullName.toUpperCase();
+            }
 
             if (gameState === 'signal_sequence') {
                 if (i === 0) { // 1位
@@ -3507,7 +3559,7 @@ function draw() {
             }
 
             // ドライバー名を描画 (左寄せ)
-            const driverNameText = `${currentActualRank}. ${rankData.driverName}`;
+            const driverNameText = `${currentActualRank}. ${displayNameInRanking}`;
             ctx.fillStyle = rankData.isPlayer ? 'yellow' : 'white'; // プレイヤーを強調
             ctx.fillText(driverNameText, rankingBoxX, rankingBoxY + i * lineHeight);
 
@@ -3553,7 +3605,14 @@ function draw() {
             } else {
                 timeDiffText = " (Winner)";
             }
-            const resultText = `${carData.finalRank}. ${carData.driverName}${timeDiffText}`;
+            // 最終リザルトでも名前を大文字のラストネームに
+            let displayNameInResults = carData.driverName;
+            if (carData.fullName) {
+                const nameParts = carData.fullName.split(' ');
+                displayNameInResults = nameParts.length > 1 ? nameParts[nameParts.length - 1].toUpperCase() : carData.fullName.toUpperCase();
+            }
+
+            const resultText = `${carData.finalRank}. ${displayNameInResults}${timeDiffText}`;
             // 最終リザルトではプレイヤーのインデックスを直接参照できないため、driverNameで比較するか、
             // carオブジェクトにisPlayerフラグを持たせるなどの対応が必要。
             // ここでは、cars配列のplayerCarIndexを使って元のオブジェクトのisPlayerを判定する。
@@ -3716,7 +3775,7 @@ function draw() {
 
     // Replayボタンの描画 (isVisibleがtrueの時、gameStateに依存しない)
     // この描画は他のUI要素より手前（最後の方）で行う
-    if (replayButton.isVisible && !careerPlayerTeamName) { // キャリアモードでは表示しない
+    if (replayButton.isVisible) { // キャリアモードでも表示するように変更
         // gameStateが 'finished' や 'all_finished' の時のスタイルを流用
         // または、リプレイ終了時専用のスタイルを定義しても良い
         ctx.fillStyle = 'rgba(100, 100, 200, 0.8)';
@@ -3728,6 +3787,42 @@ function draw() {
         ctx.textAlign = 'left'; // textAlignを戻す
     }
 
+    // Calculate positions for career mode replay end buttons
+    if (careerPlayerTeamName && gameState === 'replay' && isReplayPaused) {
+        if (careerReplayAgainButton.isVisible && careerReplayBackButton.isVisible) {
+            const buttonGroupTotalWidth = careerReplayBackButton.width + 20 + careerReplayAgainButton.width;
+            const buttonGroupStartX = canvas.width / 2 - buttonGroupTotalWidth / 2;
+            careerReplayBackButton.x = buttonGroupStartX;
+            careerReplayBackButton.y = canvas.height - careerReplayBackButton.height - 30;
+            careerReplayAgainButton.x = careerReplayBackButton.x + careerReplayBackButton.width + 20;
+            careerReplayAgainButton.y = careerReplayBackButton.y;
+        } else if (careerReplayBackButton.isVisible) { // Only "Return to Results"
+            careerReplayBackButton.x = canvas.width / 2 - careerReplayBackButton.width / 2;
+            careerReplayBackButton.y = canvas.height - careerReplayBackButton.height - 30;
+        }
+    }
+
+    // キャリアモードのリプレイ終了後「結果に戻る」ボタンの描画
+    if (careerReplayBackButton.isVisible) {
+        ctx.fillStyle = 'rgba(0, 150, 150, 0.8)'; // 少し違う色で
+        ctx.fillRect(careerReplayBackButton.x, careerReplayBackButton.y, careerReplayBackButton.width, careerReplayBackButton.height);
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 24px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(careerReplayBackButton.text, careerReplayBackButton.x + careerReplayBackButton.width / 2, careerReplayBackButton.y + careerReplayBackButton.height / 2 + 8);
+        ctx.textAlign = 'left';
+    }
+
+    // キャリアモードのリプレイ終了後「もう一度リプレイを見る」ボタンの描画
+    if (careerReplayAgainButton.isVisible) {
+        ctx.fillStyle = 'rgba(150, 0, 150, 0.8)'; // Different color
+        ctx.fillRect(careerReplayAgainButton.x, careerReplayAgainButton.y, careerReplayAgainButton.width, careerReplayAgainButton.height);
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 20px Arial'; // Slightly smaller font for longer text
+        ctx.textAlign = 'center';
+        ctx.fillText(careerReplayAgainButton.text, careerReplayAgainButton.x + careerReplayAgainButton.width / 2, careerReplayAgainButton.y + careerReplayAgainButton.height / 2 + 7);
+        ctx.textAlign = 'left';
+    }
     // gameState === 'all_finished' の時のボタン描画
     if (gameState === 'all_finished' && careerPlayerTeamName) {
         // 「NEXT」ボタンの描画 (リプレイボタンより上)
@@ -3819,11 +3914,28 @@ function handleCareerModeButtonClick() {
     }
 
     chosenPlayerInfo.age = playerAge; // プレイヤーの年齢を設定
+    // 3文字表記の入力
+    const defaultShortName = careerPlayerName.lastName.substring(0, 3).toUpperCase();
+    const shortNameInput = prompt(`あなたの3文字表記を入力してください (例: VER)。\nデフォルトは姓の頭3文字です:`, defaultShortName);
+    let finalShortName = defaultShortName;
 
-    alert(`ようこそ、${careerPlayerName.firstName} ${careerPlayerName.lastName} (${formattedDisplayName}) さん (年齢: ${chosenPlayerInfo.age}歳)！\n次に契約するチームを選択してください。`);
-    console.log("Career mode: Name entered - ", careerPlayerName, "Display name:", formattedDisplayName, "Age:", chosenPlayerInfo.age);
-    chosenPlayerInfo.driverName = formattedDisplayName; // プレイヤーの表示名を chosenPlayerInfo にも設定
+    if (shortNameInput !== null && shortNameInput.trim() !== "") {
+        // 3文字で、英大文字または数字のみを許容する正規表現
+        if (shortNameInput.trim().length === 3 && /^[A-Z0-9]{3}$/.test(shortNameInput.trim().toUpperCase())) {
+            finalShortName = shortNameInput.trim().toUpperCase();
+        } else {
+            alert("3文字表記は3文字の英大文字または数字である必要があります。デフォルト値を使用します。");
+        }
+    } else {
+        alert("3文字表記の入力がキャンセルされたか、空です。デフォルト値を使用します。");
+    }
+
+    chosenPlayerInfo.driverName = finalShortName; // プレイヤーの3文字表記を設定
     chosenPlayerInfo.fullName = careerPlayerName.firstName + " " + careerPlayerName.lastName; // フルネームも設定
+
+    alert(`ようこそ、${careerPlayerName.firstName} ${careerPlayerName.lastName} (${chosenPlayerInfo.driverName}) さん (年齢: ${chosenPlayerInfo.age}歳)！\n次に契約するチームを選択してください。`);
+    console.log("Career mode: Name entered - ", careerPlayerName, "Display name:", chosenPlayerInfo.driverName, "Age:", chosenPlayerInfo.age);
+
     // chosenPlayerInfo の他の情報はチーム選択後に設定される
     gameState = 'career_team_selection'; // チーム選択画面へ
 }
@@ -5396,7 +5508,7 @@ function applyLoadedData(dataToLoad) {
     // UIボタンの表示状態をリセット（各draw関数で再設定される）
     [quickRaceButton, careerModeButton, loadGameButton, generalSaveButton,
      careerNextButton, quickRaceBackButton, careerMachinePerformanceNextButton,
-     careerStartSeasonButton, replayButton].forEach(btn => btn.isVisible = false);
+     careerStartSeasonButton, replayButton, careerReplayBackButton, careerReplayAgainButton].forEach(btn => btn.isVisible = false);
 
     alert("ゲームをロードしました！");
     return { success: true, loadedGameState: internalLoadedGameState };
